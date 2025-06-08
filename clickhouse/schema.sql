@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS create_order (
     last_run          UInt256,
     protocol_fee      UInt64,
     vault             FixedString(42),
-    stake_asset_in    UInt8,
-    stake_asset_out   UInt8,
+    stake_asset_in    Bool,
+    stake_asset_out   Bool,
 
     /* indexes (base) ---------------------------------------- */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS pause_create (
     contract  FixedString(42),
 
     -- event --
-    is_paused UInt8,
+    is_paused Bool,
 
     /* indexes (base) ---------------------------------------- */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS pause_fill (
     contract  FixedString(42),
 
     -- event --
-    is_paused UInt8,
+    is_paused Bool,
 
     /* indexes (base) ---------------------------------------- */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -637,8 +637,8 @@ CREATE TABLE IF NOT EXISTS set_token_props (
     token_decimals  UInt32,
     token_symbol    String,
     token_name      String,
-    is_active       UInt8,
-    is_stakable     UInt8,
+    is_active       Bool,
+    is_stakable     Bool,
 
     /* indexes (base) */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -680,7 +680,7 @@ CREATE TABLE IF NOT EXISTS set_token_state (
 
     -- event --
     token     FixedString(42),
-    is_active UInt8,
+    is_active Bool,
 
     /* indexes (base) */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
