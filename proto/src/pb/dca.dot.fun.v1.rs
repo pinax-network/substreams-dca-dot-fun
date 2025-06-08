@@ -388,7 +388,7 @@ pub struct SetMaxSlippage {
     ///
     /// uint256
     #[prost(string, tag="5")]
-    pub max_slippage: ::prost::alloc::string::String,
+    pub slippage_max: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -463,7 +463,7 @@ pub struct SetMinSlippage {
     ///
     /// uint256
     #[prost(string, tag="5")]
-    pub min_slippage: ::prost::alloc::string::String,
+    pub slippage_min: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -542,8 +542,8 @@ pub struct SetTokenProps {
     #[prost(bytes="vec", tag="6")]
     pub feed: ::prost::alloc::vec::Vec<u8>,
     /// uint8
-    #[prost(uint32, tag="7")]
-    pub token_decimals: u32,
+    #[prost(uint64, tag="7")]
+    pub token_decimals: u64,
     #[prost(string, tag="8")]
     pub token_symbol: ::prost::alloc::string::String,
     #[prost(string, tag="9")]

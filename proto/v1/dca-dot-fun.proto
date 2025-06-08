@@ -202,7 +202,7 @@ message SetMaxSlippage {
   bytes contract = 3;                     // log.address
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  string max_slippage = 5;                // uint256
+  string slippage_max = 5;                // uint256
 }
 
 message SetMinExecutionValue {
@@ -238,7 +238,7 @@ message SetMinSlippage {
   bytes contract = 3;                     // log.address
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  string min_slippage = 5;                // uint256
+  string slippage_min = 5;                // uint256
 }
 
 message SetYieldSplit {
@@ -279,7 +279,7 @@ message SetTokenProps {
   // -- event --
   bytes  token           = 5;
   bytes  feed            = 6;             // bytes32
-  uint32 token_decimals  = 7;             // uint8
+  uint64 token_decimals  = 7;             // uint8
   string token_symbol    = 8;
   string token_name      = 9;
   bool   is_active       = 10;

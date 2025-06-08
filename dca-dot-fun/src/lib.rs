@@ -10,6 +10,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
 
     for trx in block.transactions() {
         for (log, caller) in logs_with_caller(&block, trx) {
+            // ────────────────────── Order-Level Events ──────────────────────
             // -- FillOrder --
             if let Some(event) = events::FillOrder::match_and_decode(log) {
                 events.fill_order.push(dca_dot_fun::FillOrder {
@@ -77,6 +78,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
                 });
             }
 
+            // ───────────────── Pause / Circuit-Breaker ─────────────────
             // -- PauseCreate --
             if let Some(event) = events::PauseCreate::match_and_decode(log) {
                 events.pause_create.push(dca_dot_fun::PauseCreate {
@@ -104,6 +106,278 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
                     contract: log.address.to_vec(),
                     // -- event --
                     is_paused: event.is_paused,
+                });
+            }
+
+            // ───── Strategy & Protocol Configuration Events ─────
+            // -- SetExecutionVarience --
+            if let Some(event) = events::SetExecutionVarience::match_and_decode(log) {
+                events.set_execution_varience.push(dca_dot_fun::SetExecutionVarience {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    execution_varience: event.execution_varience.to_string(),
+                });
+            }
+
+            // -- SetFeeCollector --
+            if let Some(event) = events::SetFeeCollector::match_and_decode(log) {
+                events.set_fee_collector.push(dca_dot_fun::SetFeeCollector {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    fee_collector: event.fee_collector.to_vec(),
+                });
+            }
+
+            // -- SetMaxFeedAgeFillOrder --
+            if let Some(event) = events::SetMaxFeedAgeFillOrder::match_and_decode(log) {
+                events.set_max_feed_age_fill_order.push(dca_dot_fun::SetMaxFeedAgeFillOrder {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    max_feed_age: event.max_feed_age.to_string(),
+                });
+            }
+
+            // -- SetMaxFeedAgeCreateOrder --
+            if let Some(event) = events::SetMaxFeedAgeCreateOrder::match_and_decode(log) {
+                events.set_max_feed_age_create_order.push(dca_dot_fun::SetMaxFeedAgeCreateOrder {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    max_feed_age: event.max_feed_age.to_string(),
+                });
+            }
+
+            // -- SetMaxScalingFactor --
+            if let Some(event) = events::SetMaxScalingFactor::match_and_decode(log) {
+                events.set_max_scaling_factor.push(dca_dot_fun::SetMaxScalingFactor {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    max_scaling_factor: event.max_scaling_factor.to_string(),
+                });
+            }
+
+            // -- SetMaxSlippage --
+            if let Some(event) = events::SetMaxSlippage::match_and_decode(log) {
+                events.set_max_slippage.push(dca_dot_fun::SetMaxSlippage {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    slippage_max: event.slippage_max.to_string(),
+                });
+            }
+
+            // -- SetMinExecutionValue --
+            if let Some(event) = events::SetMinExecutionValue::match_and_decode(log) {
+                events.set_min_execution_value.push(dca_dot_fun::SetMinExecutionValue {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    min_execution_value: event.min_execution_value.to_string(),
+                });
+            }
+
+            // -- SetMinOrderFrequencyInterval --
+            if let Some(event) = events::SetMinOrderFrequencyInterval::match_and_decode(log) {
+                events.set_min_order_frequency_interval.push(dca_dot_fun::SetMinOrderFrequencyInterval {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    min_order_frequency_interval: event.min_order_frequency_interval.to_string(),
+                });
+            }
+
+            // -- SetMinSlippage --
+            if let Some(event) = events::SetMinSlippage::match_and_decode(log) {
+                events.set_min_slippage.push(dca_dot_fun::SetMinSlippage {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    slippage_min: event.slippage_min.to_string(),
+                });
+            }
+
+            // -- SetYieldSplit --
+            if let Some(event) = events::SetYieldSplit::match_and_decode(log) {
+                events.set_yield_split.push(dca_dot_fun::SetYieldSplit {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    yield_split: event.yield_split.to_string(),
+                });
+            }
+
+            // -- SetProtocolFee --
+            if let Some(event) = events::SetProtocolFee::match_and_decode(log) {
+                events.set_protocol_fee.push(dca_dot_fun::SetProtocolFee {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    protocol_fee: event.protocol_fee.to_u64(),
+                });
+            }
+
+            // ─────────────────────── Token-Specific Events ───────────────────
+            // -- SetTokenProps --
+            if let Some(event) = events::SetTokenProps::match_and_decode(log) {
+                events.set_token_props.push(dca_dot_fun::SetTokenProps {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    token: event.token.to_vec(),
+                    feed: event.feed.to_vec(),
+                    token_decimals: event.token_decimals.to_u64(),
+                    token_symbol: event.token_symbol.to_string(),
+                    token_name: event.token_name.to_string(),
+                    is_active: event.is_active,
+                    is_stakable: event.is_stakable,
+                });
+            }
+
+            // -- SetTokenState --
+            if let Some(event) = events::SetTokenState::match_and_decode(log) {
+                events.set_token_state.push(dca_dot_fun::SetTokenState {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    token: event.token.to_vec(),
+                    is_active: event.is_active,
+                });
+            }
+
+            // ───── Role-Based Access-Control (RBAC) Events ─────
+            // -- RoleAdminChanged --
+            if let Some(event) = events::RoleAdminChanged::match_and_decode(log) {
+                events.role_admin_changed.push(dca_dot_fun::RoleAdminChanged {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    role: event.role.to_vec(),
+                    previous_admin_role: event.previous_admin_role.to_vec(),
+                    new_admin_role: event.new_admin_role.to_vec(),
+                });
+            }
+
+            // -- RoleGranted --
+            if let Some(event) = events::RoleGranted::match_and_decode(log) {
+                events.role_granted.push(dca_dot_fun::RoleGranted {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    role: event.role.to_vec(),
+                    account: event.account.to_vec(),
+                    sender: event.sender.to_vec(),
+                });
+            }
+
+            // -- RoleRevoked --
+            if let Some(event) = events::RoleRevoked::match_and_decode(log) {
+                events.role_revoked.push(dca_dot_fun::RoleRevoked {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    role: event.role.to_vec(),
+                    account: event.account.to_vec(),
+                    sender: event.sender.to_vec(),
+                });
+            }
+
+            // ───────── External Integrations & Adapters ─────────
+            // -- SetAavePool --
+            if let Some(event) = events::SetAavePool::match_and_decode(log) {
+                events.set_aave_pool.push(dca_dot_fun::SetAavePool {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    aave_pool: event.aave_pool.to_vec(),
                 });
             }
         }
