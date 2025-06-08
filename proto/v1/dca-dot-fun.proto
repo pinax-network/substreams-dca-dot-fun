@@ -2,71 +2,82 @@ syntax = "proto3";
 
 package dca.dot.fun.v1;
 
+// ╔═══════════════════════════════════════════════════════════╗
+//                            EVENTS
+// ╚═══════════════════════════════════════════════════════════╝
 message Events {
-  repeated CancelOrder cancel_order = 1;
-  repeated CreateOrder create_order = 2;
-  repeated FillOrder fill_order = 3;
-  repeated PauseCreate pause_create = 4;
-  repeated PauseFill pause_fill = 5;
-  repeated SetExecutionVarience set_execution_varience = 6;
-  repeated SetFeeCollector set_fee_collector = 7;
-  repeated SetMaxFeedAgeFillOrder set_max_feed_age_fill_order = 8;
-  repeated SetMaxFeedAgeCreateOrder set_max_feed_age_create_order = 9;
-  repeated SetMaxScalingFactor set_max_scaling_factor = 10;
-  repeated SetMaxSlippage set_max_slippage = 11;
-  repeated SetMinExecutionValue set_min_execution_value = 12;
-  repeated SetMinOrderFrequencyInterval set_min_order_frequency_interval = 13;
-  repeated SetMinSlippage set_min_slippage = 14;
-  repeated SetYieldSplit set_yield_split = 15;
-  repeated SetProtocolFee set_protocol_fee = 16;
-  repeated SetTokenProps set_token_props = 17;
-  repeated SetTokenState set_token_state = 18;
-  repeated RoleAdminChanged role_admin_changed = 19;
-  repeated RoleGranted role_granted = 20;
-  repeated RoleRevoked role_revoked = 21;
-  repeated SetAavePool set_aave_pool = 22;
+
+  // ────────────────────── Order-Level Events ──────────────────────
+  repeated CancelOrder  cancel_order  = 1;
+  repeated CreateOrder  create_order  = 2;
+  repeated FillOrder    fill_order    = 3;
+
+  // ───────────────────── Pause / Circuit-Breaker ──────────────────
+  repeated PauseCreate  pause_create  = 4;
+  repeated PauseFill    pause_fill    = 5;
+
+  // ─────────────── Strategy & Protocol Configuration ──────────────
+  repeated SetExecutionVarience           set_execution_varience            = 6;
+  repeated SetFeeCollector                set_fee_collector                 = 7;
+  repeated SetMaxFeedAgeFillOrder         set_max_feed_age_fill_order       = 8;
+  repeated SetMaxFeedAgeCreateOrder       set_max_feed_age_create_order     = 9;
+  repeated SetMaxScalingFactor            set_max_scaling_factor            = 10;
+  repeated SetMaxSlippage                 set_max_slippage                  = 11;
+  repeated SetMinExecutionValue           set_min_execution_value           = 12;
+  repeated SetMinOrderFrequencyInterval   set_min_order_frequency_interval  = 13;
+  repeated SetMinSlippage                 set_min_slippage                  = 14;
+  repeated SetYieldSplit                  set_yield_split                   = 15;
+  repeated SetProtocolFee                 set_protocol_fee                  = 16;
+
+  // ─────────────────────── Token-Specific Events ───────────────────
+  repeated SetTokenProps  set_token_props  = 17;
+  repeated SetTokenState  set_token_state  = 18;
+
+  // ────────────── Role-Based Access-Control (RBAC) ────────────────
+  repeated RoleAdminChanged  role_admin_changed = 19;
+  repeated RoleGranted       role_granted       = 20;
+  repeated RoleRevoked       role_revoked       = 21;
+
+  // ────────────── External Integrations & Adapters ────────────────
+  repeated SetAavePool  set_aave_pool = 22;
 }
 
+// ╔═══════════════════════════════════════════════════════════╗
+//                        ORDER-LEVEL EVENTS
+// ╚═══════════════════════════════════════════════════════════╝
 message CancelOrder {
   // -- transaction --
   bytes tx_hash = 1;
-
   // -- caller --
-  optional bytes caller = 2; // call.caller
-
+  optional bytes caller = 2;              // call.caller
   // -- log --
-  bytes contract = 3; // log.address
-  uint64 ordinal = 4; // log.ordinal
-
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  string order_id = 5;
+  string order_id = 5;                    // uint256
   bytes vault = 6;
 }
-
 
 message CreateOrder {
   // -- transaction --
   bytes tx_hash = 1;
-
   // -- caller --
-  optional bytes caller = 2; // call.caller
-
+  optional bytes caller = 2;              // call.caller
   // -- log --
-  bytes contract = 3; // log.address
-  uint64 ordinal = 4; // log.ordinal
-
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  string order_id = 5;
+  string order_id = 5;                    // uint256
   bytes creator = 6;
   bytes recipient = 7;
   bytes token_in = 8;
   bytes token_out = 9;
-  string spend_amount = 10; // uint256
-  string repeats = 11; // uint256
-  string slippage = 12; // uint256
-  string freq_interval = 13; // uint256
-  string scaling_interval = 14; // uint256
-  string last_run = 15; // uint256
+  string spend_amount = 10;               // uint256
+  string repeats = 11;                    // uint256
+  string slippage = 12;                   // uint256
+  string freq_interval = 13;              // uint256
+  string scaling_interval = 14;           // uint256
+  string last_run = 15;                   // uint256
   uint64 protocol_fee = 16;
   bytes vault = 17;
   bool stake_asset_in = 18;
@@ -76,36 +87,33 @@ message CreateOrder {
 message FillOrder {
   // -- transaction --
   bytes tx_hash = 1;
-
   // -- caller --
-  optional bytes caller = 2; // call.caller
-
+  optional bytes caller = 2;              // call.caller
   // -- log --
-  bytes contract = 3; // log.address
-  uint64 ordinal = 4; // log.ordinal
-
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  string order_id = 5;
+  string order_id = 5;                    // uint256
   bytes recipient = 6;
-  string fill_amount = 7; // uint256
-  string amount_of_token_out = 8; // uint256
+  string fill_amount = 7;                 // uint256
+  string amount_of_token_out = 8;         // uint256
   uint64 protocol_fee = 9;
-  string token_in_price = 10; // uint256
-  string token_out_price = 11; // uint256
-  string scaling_factor = 12; // uint256
+  string token_in_price = 10;             // uint256
+  string token_out_price = 11;            // uint256
+  string scaling_factor = 12;             // uint256
 }
 
+// ╔═══════════════════════════════════════════════════════════╗
+//                   PAUSE / CIRCUIT-BREAKER EVENTS
+// ╚═══════════════════════════════════════════════════════════╝
 message PauseCreate {
   // -- transaction --
   bytes tx_hash = 1;
-
   // -- caller --
-  optional bytes caller = 2; // call.caller
-
+  optional bytes caller = 2;              // call.caller
   // -- log --
-  bytes contract = 3; // log.address
-  uint64 ordinal = 4; // log.ordinal
-
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
   // -- event --
   bool is_paused = 5;
 }
@@ -113,15 +121,240 @@ message PauseCreate {
 message PauseFill {
   // -- transaction --
   bytes tx_hash = 1;
-
   // -- caller --
-  optional bytes caller = 2; // call.caller
-
+  optional bytes caller = 2;              // call.caller
   // -- log --
-  bytes contract = 3; // log.address
-  uint64 ordinal = 4; // log.ordinal
-
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
   // -- event --
   bool is_paused = 5;
 }
 
+// ╔═══════════════════════════════════════════════════════════╗
+//           STRATEGY & PROTOCOL CONFIGURATION EVENTS
+// ╚═══════════════════════════════════════════════════════════╝
+message SetExecutionVarience {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string execution_varience = 5;          // uint256
+}
+
+message SetFeeCollector {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes fee_collector = 5;
+}
+
+message SetMaxFeedAgeFillOrder {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string max_feed_age = 5;                // uint256
+}
+
+message SetMaxFeedAgeCreateOrder {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string max_feed_age = 5;                // uint256
+}
+
+message SetMaxScalingFactor {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string max_scaling_factor = 5;          // uint256
+}
+
+message SetMaxSlippage {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string max_slippage = 5;                // uint256
+}
+
+message SetMinExecutionValue {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string min_execution_value = 5;         // uint256
+}
+
+message SetMinOrderFrequencyInterval {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string min_order_frequency_interval = 5;// uint256
+}
+
+message SetMinSlippage {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string min_slippage = 5;                // uint256
+}
+
+message SetYieldSplit {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string yield_split = 5;                 // uint256
+}
+
+message SetProtocolFee {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  uint64 protocol_fee = 5;
+}
+
+// ╔═══════════════════════════════════════════════════════════╗
+//                        TOKEN CONFIGURATION
+// ╚═══════════════════════════════════════════════════════════╝
+message SetTokenProps {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes  token           = 5;
+  bytes  feed            = 6;             // bytes32
+  uint32 token_decimals  = 7;             // uint8
+  string token_symbol    = 8;
+  string token_name      = 9;
+  bool   is_active       = 10;
+  bool   is_stakable     = 11;
+}
+
+message SetTokenState {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes token = 5;
+  bool  is_active = 6;
+}
+
+// ╔═══════════════════════════════════════════════════════════╗
+//             ROLE-BASED ACCESS-CONTROL (RBAC) EVENTS
+// ╚═══════════════════════════════════════════════════════════╝
+message RoleAdminChanged {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes role               = 5;           // bytes32
+  bytes previous_admin_role = 6;          // bytes32
+  bytes new_admin_role      = 7;          // bytes32
+}
+
+message RoleGranted {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes role    = 5;                      // bytes32
+  bytes account = 6;
+  bytes sender  = 7;
+}
+
+message RoleRevoked {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes role    = 5;                      // bytes32
+  bytes account = 6;
+  bytes sender  = 7;
+}
+
+// ╔═══════════════════════════════════════════════════════════╗
+//            EXTERNAL INTEGRATIONS & ADAPTER CONFIGS
+// ╚═══════════════════════════════════════════════════════════╝
+message SetAavePool {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes aave_pool = 5;
+}

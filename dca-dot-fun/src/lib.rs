@@ -12,7 +12,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
         for (log, caller) in logs_with_caller(&block, trx) {
             // -- FillOrder --
             if let Some(event) = events::FillOrder::match_and_decode(log) {
-                events.fill_orders.push(dca_dot_fun::FillOrder {
+                events.fill_order.push(dca_dot_fun::FillOrder {
                     // -- transaction --
                     tx_hash: trx.hash.to_vec(),
                     // -- call --
@@ -34,7 +34,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
 
             // -- CreateOrder --
             if let Some(event) = events::CreateOrder::match_and_decode(log) {
-                events.create_orders.push(dca_dot_fun::CreateOrder {
+                events.create_order.push(dca_dot_fun::CreateOrder {
                     // -- transaction --
                     tx_hash: trx.hash.to_vec(),
                     // -- call --
@@ -63,7 +63,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
 
             // -- CancelOrder --
             if let Some(event) = events::CancelOrder::match_and_decode(log) {
-                events.cancel_orders.push(dca_dot_fun::CancelOrder {
+                events.cancel_order.push(dca_dot_fun::CancelOrder {
                     // -- transaction --
                     tx_hash: trx.hash.to_vec(),
                     // -- call --
@@ -79,7 +79,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
 
             // -- PauseCreate --
             if let Some(event) = events::PauseCreate::match_and_decode(log) {
-                events.cancel_orders.push(dca_dot_fun::PauseCreate {
+                events.pause_create.push(dca_dot_fun::PauseCreate {
                     // -- transaction --
                     tx_hash: trx.hash.to_vec(),
                     // -- call --
@@ -94,7 +94,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
 
             // -- PauseFill --
             if let Some(event) = events::PauseFill::match_and_decode(log) {
-                events.cancel_orders.push(dca_dot_fun::PauseFill {
+                events.pause_fill.push(dca_dot_fun::PauseFill {
                     // -- transaction --
                     tx_hash: trx.hash.to_vec(),
                     // -- call --
