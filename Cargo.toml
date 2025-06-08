@@ -1,0 +1,18 @@
+[workspace]
+members = ["proto", "clickhouse", "dca-dot-fun", "common"]
+resolver = "2"
+
+[workspace.package]
+description = "DCA.fun"
+edition = "2021"
+version = "0.0.0"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+substreams = "0.6.1"
+substreams-abis = "0.4.5"
+substreams-ethereum = "0.10.5"
+substreams-database-change = "2.1"
+
+[profile.release]
+lto = true

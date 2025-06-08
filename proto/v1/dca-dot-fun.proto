@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package dca.dot.fun.v1;
+
+message Events {
+  repeated CancelOrder cancel_order = 1;
+  repeated CreateOrder create_order = 2;
+  repeated FillOrder fill_order = 3;
+  repeated PauseCreate pause_create = 4;
+  repeated PauseFill pause_fill = 5;
+  repeated SetExecutionVarience set_execution_varience = 6;
+  repeated SetFeeCollector set_fee_collector = 7;
+  repeated SetMaxFeedAgeFillOrder set_max_feed_age_fill_order = 8;
+  repeated SetMaxFeedAgeCreateOrder set_max_feed_age_create_order = 9;
+  repeated SetMaxScalingFactor set_max_scaling_factor = 10;
+  repeated SetMaxSlippage set_max_slippage = 11;
+  repeated SetMinExecutionValue set_min_execution_value = 12;
+  repeated SetMinOrderFrequencyInterval set_min_order_frequency_interval = 13;
+  repeated SetMinSlippage set_min_slippage = 14;
+  repeated SetYieldSplit set_yield_split = 15;
+  repeated SetProtocolFee set_protocol_fee = 16;
+  repeated SetTokenProps set_token_props = 17;
+  repeated SetTokenState set_token_state = 18;
+  repeated RoleAdminChanged role_admin_changed = 19;
+  repeated RoleGranted role_granted = 20;
+  repeated RoleRevoked role_revoked = 21;
+  repeated SetAavePool set_aave_pool = 22;
+}
+
+message CancelOrder {
+  // -- transaction --
+  bytes tx_hash = 1;
+
+  // -- caller --
+  optional bytes caller = 2; // call.caller
+
+  // -- log --
+  bytes contract = 3; // log.address
+  uint64 ordinal = 4; // log.ordinal
+
+  // -- event --
+  string order_id = 5;
+  bytes vault = 6;
+}
+
+
+message CreateOrder {
+  // -- transaction --
+  bytes tx_hash = 1;
+
+  // -- caller --
+  optional bytes caller = 2; // call.caller
+
+  // -- log --
+  bytes contract = 3; // log.address
+  uint64 ordinal = 4; // log.ordinal
+
+  // -- event --
+  string order_id = 5;
+  bytes creator = 6;
+  bytes recipient = 7;
+  bytes token_in = 8;
+  bytes token_out = 9;
+  string spend_amount = 10; // uint256
+  string repeats = 11; // uint256
+  string slippage = 12; // uint256
+  string freq_interval = 13; // uint256
+  string scaling_interval = 14; // uint256
+  string last_run = 15; // uint256
+  uint64 protocol_fee = 16;
+  bytes vault = 17;
+  bool stake_asset_in = 18;
+  bool stake_asset_out = 19;
+}
+
+message FillOrder {
+  // -- transaction --
+  bytes tx_hash = 1;
+
+  // -- caller --
+  optional bytes caller = 2; // call.caller
+
+  // -- log --
+  bytes contract = 3; // log.address
+  uint64 ordinal = 4; // log.ordinal
+
+  // -- event --
+  string order_id = 5;
+  bytes recipient = 6;
+  string fill_amount = 7; // uint256
+  string amount_of_token_out = 8; // uint256
+  uint64 protocol_fee = 9;
+  string token_in_price = 10; // uint256
+  string token_out_price = 11; // uint256
+  string scaling_factor = 12; // uint256
+}
+
+message PauseCreate {
+  // -- transaction --
+  bytes tx_hash = 1;
+
+  // -- caller --
+  optional bytes caller = 2; // call.caller
+
+  // -- log --
+  bytes contract = 3; // log.address
+  uint64 ordinal = 4; // log.ordinal
+
+  // -- event --
+  bool is_paused = 5;
+}
+
+message PauseFill {
+  // -- transaction --
+  bytes tx_hash = 1;
+
+  // -- caller --
+  optional bytes caller = 2; // call.caller
+
+  // -- log --
+  bytes contract = 3; // log.address
+  uint64 ordinal = 4; // log.ordinal
+
+  // -- event --
+  bool is_paused = 5;
+}
+

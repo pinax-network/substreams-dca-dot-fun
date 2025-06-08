@@ -1,0 +1,26 @@
+specVersion: v0.1.0
+package:
+  name: dca_dot_fun
+  version: v0.1.0
+  url: https://github.com/pinax-network/substreams-dca-dot-fun
+  description: DCA.fun events
+  image: ../image.png
+
+protobuf:
+  files:
+    - dca-dot-fun.proto
+  importPaths:
+    - ../proto/v1
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ../target/wasm32-unknown-unknown/release/dca_dot_fun.wasm
+
+modules:
+  - name: map_events
+    kind: map
+    inputs:
+      - source: sf.ethereum.type.v2.Block
+    output:
+      type: proto:dca.dot.fun.v1.Events

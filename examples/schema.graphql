@@ -1,0 +1,262 @@
+type CancelOrder @entity(immutable: true) {
+  id: Bytes!
+  orderId: BigInt! # uint256
+  vault: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CreateOrder @entity(immutable: true) {
+  id: Bytes!
+  orderId: BigInt! # uint256
+  creator: Bytes! # address
+  recipient: Bytes! # address
+  tokenIn: Bytes! # address
+  tokenOut: Bytes! # address
+  spendAmount: BigInt! # uint256
+  repeats: BigInt! # uint256
+  slippage: BigInt! # uint256
+  freqInterval: BigInt! # uint256
+  scalingInterval: BigInt! # uint256
+  lastRun: BigInt! # uint256
+  protocolFee: BigInt! # uint256
+  vault: Bytes! # address
+  stakeAssetIn: Boolean! # bool
+  stakeAssetOut: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FillOrder @entity(immutable: true) {
+  id: Bytes!
+  orderId: BigInt! # uint256
+  caller: Bytes! # address
+  recipient: Bytes! # address
+  fillAmount: BigInt! # uint256
+  amountOfTokenOut: BigInt! # uint256
+  tokenInPrice: BigInt! # uint256
+  tokenOutPrice: BigInt! # uint256
+  protocolFee: BigInt! # uint256
+  scalingFactor: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  order: Order!
+}
+
+type PauseCreate @entity(immutable: true) {
+  id: Bytes!
+  isPaused: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PauseFill @entity(immutable: true) {
+  id: Bytes!
+  isPaused: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetExecutionVarience @entity(immutable: true) {
+  id: Bytes!
+  executionVarience: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetFeeCollector @entity(immutable: true) {
+  id: Bytes!
+  feeCollector: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetMaxFeedAgeFillOrder @entity(immutable: true) {
+  id: Bytes!
+  maxFeedAge: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetMaxFeedAgeCreateOrder @entity(immutable: true) {
+  id: Bytes!
+  maxFeedAge: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetMaxScalingFactor @entity(immutable: true) {
+  id: Bytes!
+  maxScalingFactor: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetMaxSlippage @entity(immutable: true) {
+  id: Bytes!
+  slippageMax: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetMinExecutionValue @entity(immutable: true) {
+  id: Bytes!
+  minExecutionValue: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetMinOrderFrequencyInterval @entity(immutable: true) {
+  id: Bytes!
+  minOrderFrequencyInterval: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetMinSlippage @entity(immutable: true) {
+  id: Bytes!
+  slippageMin: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetYieldSplit @entity(immutable: true) {
+  id: Bytes!
+  yieldSplit: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetProtocolFee @entity(immutable: true) {
+  id: Bytes!
+  protocolFee: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetTokenProps @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  feed: Bytes! # bytes32
+  tokenDecimals: Int! # uint8
+  tokenSymbol: String! # string
+  tokenName: String! # string
+  isActive: Boolean! # bool
+  isStakable: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetTokenState @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  isActive: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+# Custom types
+
+type User @entity {
+  id: Bytes! # address
+  orders: [Order!]! @derivedFrom(field: "creator")
+  points: BigDecimal! # uint256
+}
+
+type Order @entity {
+  id: ID! # orderId
+  creator: User! # address
+  recipient: Bytes! # address
+  tokenIn: Token!
+  tokenOut: Token!
+  spendAmount: BigInt! # uint256
+  repeats: BigInt! # uint256
+  slippage: BigInt! # uint256
+  freqInterval: BigInt! # uint256
+  scalingInterval: BigInt! # uint256
+  lastRun: BigInt! # uint256
+  nextRun: BigInt! # uint256
+  protocolFee: BigInt! # uint256
+  vault: Bytes! # address
+  stakeAssetIn: Boolean! # bool
+  stakeAssetOut: Boolean! # bool
+  canceled: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  fills: [FillOrder!]! @derivedFrom(field: "order")
+}
+
+type Token @entity {
+  id: Bytes! # address
+  feed: Bytes! # bytes32
+  tokenDecimals: BigInt! # uint8
+  tokenSymbol: String! # string
+  tokenName: String! # string
+  isActive: Boolean! # bool
+  isStakable: Boolean! # bool
+  list: TokenList!
+  totalAmountFilled: BigInt! # Total amount as tokenIn
+  totalAmountReceived: BigInt! # Total amount as tokenOut
+}
+
+type TokenList @entity {
+  id: String! #  "all-tokens"
+  tokens: [Token!]!
+}
+
+type RoleAdminChanged @entity(immutable: true) {
+  id: Bytes!
+  role: Bytes! # bytes32
+  previousAdminRole: Bytes! # bytes32
+  newAdminRole: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RoleGranted @entity(immutable: true) {
+  id: Bytes!
+  role: Bytes! # bytes32
+  account: Bytes! # address
+  sender: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RoleRevoked @entity(immutable: true) {
+  id: Bytes!
+  role: Bytes! # bytes32
+  account: Bytes! # address
+  sender: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetAavePool @entity(immutable: true) {
+  id: Bytes!
+  aavePool: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
