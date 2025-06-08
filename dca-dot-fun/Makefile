@@ -1,6 +1,5 @@
 ENDPOINT ?= basesepolia.substreams.pinax.network:443
-ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-SINK_RANGE := ":"
+START_BLOCK ?= 26776016
 
 .PHONY: build
 build:
@@ -12,8 +11,8 @@ pack: build
 
 .PHONY: noop
 noop: build
-	substreams-sink-noop $(ENDPOINT) substreams.yaml map_events -H "X-Sf-Substreams-Parallel-Jobs: 500"
+	substreams-sink-noop $(ENDPOINT) substreams.yaml map_events -H "X-Sf-Substreams-Parallel-Jobs: 500" $(START_BLOCK):
 
 .PHONY: gui
 gui: build
-	substreams gui -e $(ENDPOINT) substreams.yaml map_events -s 26776016
+	substreams gui -e $(ENDPOINT) substreams.yaml map_events -s $(START_BLOCK) --production-mode
