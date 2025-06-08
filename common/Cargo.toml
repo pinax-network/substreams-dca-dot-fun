@@ -10,3 +10,4 @@ crate-type = ["rlib"]
 [dependencies]
 substreams = { workspace = true }
 substreams-ethereum = { workspace = true }
+substreams-database-change = { workspace = true }

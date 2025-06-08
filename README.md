@@ -1,5 +1,16 @@
-# `DCA.fun` events
+# `DCA.fun` Substreams
 
 ## Includes
 
-- `Assign`
+### `dca-dot-fun` Substreams
+
+- Order-Level Events
+- Pause / Circuit-Breaker
+- Strategy & Protocol Configuration
+- Token-Specific Events
+- Role-Based Access-Control (RBAC)
+- External Integrations & Adapters
+
+### `clickhouse` Substreams
+
+- ClickHouse Schema

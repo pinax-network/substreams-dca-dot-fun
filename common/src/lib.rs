@@ -1,4 +1,5 @@
-use substreams::{hex, log, scalar::BigInt};
+pub mod clickhouse;
+use substreams::{hex, log, pb::substreams::Clock, scalar::BigInt, Hex};
 use substreams_ethereum::pb::eth::v2::{block::DetailLevel, Block, Log, TransactionTrace};
 
 pub type Address = Vec<u8>;
@@ -62,4 +63,16 @@ pub fn logs_with_caller<'a>(block: &'a Block, trx: &'a TransactionTrace) -> Vec<
     }
 
     results
+}
+
+pub fn bytes_to_hex(bytes: &[u8]) -> String {
+    format! {"0x{}", Hex::encode(bytes)}.to_string()
+}
+
+// In ClickHouse, an aggregate function like argMax can only take one expression as the "ordering" argument.
+// So we typically combine (block_num, index) into a single monotonic integer.
+// For example, if each of block_num and index fits in 32 bits, we can do:
+// max(toUInt64(block_num) * 2^32 + index) AS version
+pub fn to_global_sequence(clock: &Clock, index: u64) -> u64 {
+    (clock.number << 32) + index
 }
