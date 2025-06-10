@@ -26,7 +26,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
                     recipient: event.recipient.to_vec(),
                     fill_amount: event.fill_amount.to_string(),
                     amount_of_token_out: event.amount_of_token_out.to_string(),
-                    protocol_fee: event.protocol_fee.to_u64(),
+                    protocol_fee: event.protocol_fee.to_string(),
                     token_in_price: event.token_in_price.to_string(),
                     token_out_price: event.token_out_price.to_string(),
                     scaling_factor: event.scaling_factor.to_string(),
@@ -55,7 +55,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
                     freq_interval: event.freq_interval.to_string(),
                     scaling_interval: event.scaling_interval.to_string(),
                     last_run: event.last_run.to_string(),
-                    protocol_fee: event.protocol_fee.to_u64(),
+                    protocol_fee: event.protocol_fee.to_string(),
                     vault: event.vault.to_vec(),
                     stake_asset_in: event.stake_asset_in,
                     stake_asset_out: event.stake_asset_out,
@@ -112,17 +112,19 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
             // ───── Strategy & Protocol Configuration Events ─────
             // -- SetExecutionVarience --
             if let Some(event) = events::SetExecutionVarience::match_and_decode(log) {
-                events.set_execution_varience.push(dca_dot_fun::SetExecutionVarience {
-                    // -- transaction --
-                    tx_hash: trx.hash.to_vec(),
-                    // -- call --
-                    caller: caller.clone(),
-                    // -- log --
-                    ordinal: log.ordinal,
-                    contract: log.address.to_vec(),
-                    // -- event --
-                    execution_varience: event.execution_varience.to_string(),
-                });
+                events
+                    .set_execution_varience
+                    .push(dca_dot_fun::SetExecutionVarience {
+                        // -- transaction --
+                        tx_hash: trx.hash.to_vec(),
+                        // -- call --
+                        caller: caller.clone(),
+                        // -- log --
+                        ordinal: log.ordinal,
+                        contract: log.address.to_vec(),
+                        // -- event --
+                        execution_varience: event.execution_varience.to_string(),
+                    });
             }
 
             // -- SetFeeCollector --
@@ -142,47 +144,53 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
 
             // -- SetMaxFeedAgeFillOrder --
             if let Some(event) = events::SetMaxFeedAgeFillOrder::match_and_decode(log) {
-                events.set_max_feed_age_fill_order.push(dca_dot_fun::SetMaxFeedAgeFillOrder {
-                    // -- transaction --
-                    tx_hash: trx.hash.to_vec(),
-                    // -- call --
-                    caller: caller.clone(),
-                    // -- log --
-                    ordinal: log.ordinal,
-                    contract: log.address.to_vec(),
-                    // -- event --
-                    max_feed_age: event.max_feed_age.to_string(),
-                });
+                events
+                    .set_max_feed_age_fill_order
+                    .push(dca_dot_fun::SetMaxFeedAgeFillOrder {
+                        // -- transaction --
+                        tx_hash: trx.hash.to_vec(),
+                        // -- call --
+                        caller: caller.clone(),
+                        // -- log --
+                        ordinal: log.ordinal,
+                        contract: log.address.to_vec(),
+                        // -- event --
+                        max_feed_age: event.max_feed_age.to_string(),
+                    });
             }
 
             // -- SetMaxFeedAgeCreateOrder --
             if let Some(event) = events::SetMaxFeedAgeCreateOrder::match_and_decode(log) {
-                events.set_max_feed_age_create_order.push(dca_dot_fun::SetMaxFeedAgeCreateOrder {
-                    // -- transaction --
-                    tx_hash: trx.hash.to_vec(),
-                    // -- call --
-                    caller: caller.clone(),
-                    // -- log --
-                    ordinal: log.ordinal,
-                    contract: log.address.to_vec(),
-                    // -- event --
-                    max_feed_age: event.max_feed_age.to_string(),
-                });
+                events
+                    .set_max_feed_age_create_order
+                    .push(dca_dot_fun::SetMaxFeedAgeCreateOrder {
+                        // -- transaction --
+                        tx_hash: trx.hash.to_vec(),
+                        // -- call --
+                        caller: caller.clone(),
+                        // -- log --
+                        ordinal: log.ordinal,
+                        contract: log.address.to_vec(),
+                        // -- event --
+                        max_feed_age: event.max_feed_age.to_string(),
+                    });
             }
 
             // -- SetMaxScalingFactor --
             if let Some(event) = events::SetMaxScalingFactor::match_and_decode(log) {
-                events.set_max_scaling_factor.push(dca_dot_fun::SetMaxScalingFactor {
-                    // -- transaction --
-                    tx_hash: trx.hash.to_vec(),
-                    // -- call --
-                    caller: caller.clone(),
-                    // -- log --
-                    ordinal: log.ordinal,
-                    contract: log.address.to_vec(),
-                    // -- event --
-                    max_scaling_factor: event.max_scaling_factor.to_string(),
-                });
+                events
+                    .set_max_scaling_factor
+                    .push(dca_dot_fun::SetMaxScalingFactor {
+                        // -- transaction --
+                        tx_hash: trx.hash.to_vec(),
+                        // -- call --
+                        caller: caller.clone(),
+                        // -- log --
+                        ordinal: log.ordinal,
+                        contract: log.address.to_vec(),
+                        // -- event --
+                        max_scaling_factor: event.max_scaling_factor.to_string(),
+                    });
             }
 
             // -- SetMaxSlippage --
@@ -202,32 +210,36 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
 
             // -- SetMinExecutionValue --
             if let Some(event) = events::SetMinExecutionValue::match_and_decode(log) {
-                events.set_min_execution_value.push(dca_dot_fun::SetMinExecutionValue {
-                    // -- transaction --
-                    tx_hash: trx.hash.to_vec(),
-                    // -- call --
-                    caller: caller.clone(),
-                    // -- log --
-                    ordinal: log.ordinal,
-                    contract: log.address.to_vec(),
-                    // -- event --
-                    min_execution_value: event.min_execution_value.to_string(),
-                });
+                events
+                    .set_min_execution_value
+                    .push(dca_dot_fun::SetMinExecutionValue {
+                        // -- transaction --
+                        tx_hash: trx.hash.to_vec(),
+                        // -- call --
+                        caller: caller.clone(),
+                        // -- log --
+                        ordinal: log.ordinal,
+                        contract: log.address.to_vec(),
+                        // -- event --
+                        min_execution_value: event.min_execution_value.to_string(),
+                    });
             }
 
             // -- SetMinOrderFrequencyInterval --
             if let Some(event) = events::SetMinOrderFrequencyInterval::match_and_decode(log) {
-                events.set_min_order_frequency_interval.push(dca_dot_fun::SetMinOrderFrequencyInterval {
-                    // -- transaction --
-                    tx_hash: trx.hash.to_vec(),
-                    // -- call --
-                    caller: caller.clone(),
-                    // -- log --
-                    ordinal: log.ordinal,
-                    contract: log.address.to_vec(),
-                    // -- event --
-                    min_order_frequency_interval: event.min_order_frequency_interval.to_string(),
-                });
+                events
+                    .set_min_order_frequency_interval
+                    .push(dca_dot_fun::SetMinOrderFrequencyInterval {
+                        // -- transaction --
+                        tx_hash: trx.hash.to_vec(),
+                        // -- call --
+                        caller: caller.clone(),
+                        // -- log --
+                        ordinal: log.ordinal,
+                        contract: log.address.to_vec(),
+                        // -- event --
+                        min_order_frequency_interval: event.min_order_frequency_interval.to_string(),
+                    });
             }
 
             // -- SetMinSlippage --
@@ -271,7 +283,7 @@ fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::E
                     ordinal: log.ordinal,
                     contract: log.address.to_vec(),
                     // -- event --
-                    protocol_fee: event.protocol_fee.to_u64(),
+                    protocol_fee: event.protocol_fee.to_string(),
                 });
             }
 

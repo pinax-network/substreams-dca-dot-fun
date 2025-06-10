@@ -137,8 +137,8 @@ pub struct CreateOrder {
     /// uint256
     #[prost(string, tag="15")]
     pub last_run: ::prost::alloc::string::String,
-    #[prost(uint64, tag="16")]
-    pub protocol_fee: u64,
+    #[prost(string, tag="16")]
+    pub protocol_fee: ::prost::alloc::string::String,
     #[prost(bytes="vec", tag="17")]
     pub vault: ::prost::alloc::vec::Vec<u8>,
     #[prost(bool, tag="18")]
@@ -178,8 +178,8 @@ pub struct FillOrder {
     /// uint256
     #[prost(string, tag="8")]
     pub amount_of_token_out: ::prost::alloc::string::String,
-    #[prost(uint64, tag="9")]
-    pub protocol_fee: u64,
+    #[prost(string, tag="9")]
+    pub protocol_fee: ::prost::alloc::string::String,
     /// uint256
     #[prost(string, tag="10")]
     pub token_in_price: ::prost::alloc::string::String,
@@ -510,8 +510,8 @@ pub struct SetProtocolFee {
     #[prost(uint64, tag="4")]
     pub ordinal: u64,
     /// -- event --
-    #[prost(uint64, tag="5")]
-    pub protocol_fee: u64,
+    #[prost(string, tag="5")]
+    pub protocol_fee: ::prost::alloc::string::String,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
 ///                         TOKEN CONFIGURATION

@@ -78,7 +78,7 @@ message CreateOrder {
   string freq_interval = 13;              // uint256
   string scaling_interval = 14;           // uint256
   string last_run = 15;                   // uint256
-  uint64 protocol_fee = 16;
+  string protocol_fee = 16;
   bytes vault = 17;
   bool stake_asset_in = 18;
   bool stake_asset_out = 19;
@@ -97,7 +97,7 @@ message FillOrder {
   bytes recipient = 6;
   string fill_amount = 7;                 // uint256
   string amount_of_token_out = 8;         // uint256
-  uint64 protocol_fee = 9;
+  string protocol_fee = 9;
   string token_in_price = 10;             // uint256
   string token_out_price = 11;            // uint256
   string scaling_factor = 12;             // uint256
@@ -262,7 +262,7 @@ message SetProtocolFee {
   bytes contract = 3;                     // log.address
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  uint64 protocol_fee = 5;
+  string protocol_fee = 5;
 }
 
 // ╔═══════════════════════════════════════════════════════════╗

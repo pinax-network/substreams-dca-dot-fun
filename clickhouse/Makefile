@@ -1,5 +1,5 @@
 ENDPOINT ?= basesepolia.substreams.pinax.network:443
-START_BLOCK ?= 26776016
+START_BLOCK ?= 26646358
 
 .PHONY: build
 build:

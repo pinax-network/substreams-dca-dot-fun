@@ -1,5 +1,5 @@
 ENDPOINT ?= basesepolia.substreams.pinax.network:443
-START_BLOCK ?= 26776016
+START_BLOCK ?= 26646358
 
 .PHONY: build
 build:
@@ -15,4 +15,4 @@ noop: build
 
 .PHONY: gui
 gui: build
-	substreams gui -e $(ENDPOINT) substreams.yaml map_events -s $(START_BLOCK) --production-mode
+	substreams gui -e $(ENDPOINT) substreams.yaml map_events -s $(START_BLOCK)

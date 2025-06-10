@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS create_order (
     freq_interval     UInt256,
     scaling_interval  UInt256,
     last_run          UInt256,
-    protocol_fee      UInt64,
+    protocol_fee      UInt256,
     vault             FixedString(42),
     stake_asset_in    Bool,
     stake_asset_out   Bool,
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS fill_order (
     recipient           FixedString(42),
     fill_amount         UInt256,
     amount_of_token_out UInt256,
-    protocol_fee        UInt64,
+    protocol_fee        UInt256,
     token_in_price      UInt256,
     token_out_price     UInt256,
     scaling_factor      UInt256,
@@ -595,7 +595,7 @@ CREATE TABLE IF NOT EXISTS set_protocol_fee (
     contract  FixedString(42),
 
     -- event --
-    protocol_fee UInt64,
+    protocol_fee UInt256,
 
     /* indexes (base) */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
