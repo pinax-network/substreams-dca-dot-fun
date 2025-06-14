@@ -1,6 +1,6 @@
 use common::{
     bytes_to_hex,
-    clickhouse::{common_key, set_log},
+    clickhouse::{common_key, set_clock, set_log},
 };
 use substreams::pb::substreams::Clock;
 
@@ -17,7 +17,6 @@ pub fn db_out(
     let mut index = 0u64; // relative index
 
     /* ────────────────────── Order-Level Events ───────────────────── */
-
     // CancelOrder
     for e in events.cancel_order {
         let row = tables
@@ -240,6 +239,14 @@ pub fn db_out(
             .set("aave_pool", bytes_to_hex(&e.aave_pool));
         set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
         index += 1;
+    }
+    /* ────────────────────── Blocks ───────────────────── */
+    // ONLY include blocks if events are present
+    if tables.tables.len() > 0 {
+        set_clock(
+            &clock,
+            tables.create_row("blocks", [("block_num", clock.number.to_string())]),
+        );
     }
 
     Ok(tables.to_database_changes())

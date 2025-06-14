@@ -1,5 +1,5 @@
 ENDPOINT ?= basesepolia.substreams.pinax.network:443
-START_BLOCK ?= 26646358
+START_BLOCK ?= 26620234
 
 .PHONY: build
 build:
@@ -15,11 +15,7 @@ noop: build
 
 .PHONY: gui
 gui: build
-	substreams gui -e $(ENDPOINT) substreams.yaml db_out -s $(START_BLOCK)
-
-.PHONY: prod
-prod: build
-	substreams gui -e $(ENDPOINT) substreams.yaml db_out -s 0 -t 0 --limit-processed-blocks 0 --production-mode
+	substreams gui -e $(ENDPOINT) substreams.yaml db_out -s $(START_BLOCK) -t 0 --limit-processed-blocks 0 --production-mode  -H "X-Sf-Substreams-Parallel-Jobs: 500"
 
 .PHONY: dev
 dev: build

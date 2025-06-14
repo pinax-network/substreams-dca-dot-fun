@@ -1,15 +1,36 @@
+use std::collections::HashSet;
+
 use common::logs_with_caller;
 use proto::pb::dca::dot::fun::v1 as dca_dot_fun;
+use substreams::Hex;
 use substreams_abis::evm::dca_dot_fun::events;
 use substreams_ethereum::pb::eth::v2::Block;
 use substreams_ethereum::Event;
 
 #[substreams::handlers::map]
-fn map_events(block: Block) -> Result<dca_dot_fun::Events, substreams::errors::Error> {
+fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, substreams::errors::Error> {
     let mut events = dca_dot_fun::Events::default();
+
+    // ────────────────────── Filter by DCA Contract ──────────────────────
+    // Include multiple by using ","
+    // default = 0xdCa0DF1ca04143A10Ed7a8A8354E51228Eb8c41e
+    let allowed: HashSet<String> = params
+        .split(',') // accept "addr1,addr2, …"
+        .map(|s| {
+            s.trim() // remove surrounding spaces
+                .trim_start_matches("0x") // drop optional 0x
+                .to_ascii_lowercase()
+        })
+        .collect();
+    if allowed.len() == 0 {
+        panic!("params is required to filter by DCA contract address(es). Example: 0xdCa0DF1ca04143A10Ed7a8A8354E51228Eb8c41e");
+    }
 
     for trx in block.transactions() {
         for (log, caller) in logs_with_caller(&block, trx) {
+            if !allowed.contains(&Hex::encode(&log.address)) {
+                continue; // skip logs not in the allow-list
+            }
             // ────────────────────── Order-Level Events ──────────────────────
             // -- FillOrder --
             if let Some(event) = events::FillOrder::match_and_decode(log) {
