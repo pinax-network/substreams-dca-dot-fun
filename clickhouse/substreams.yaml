@@ -12,7 +12,7 @@ imports:
   sql: https://github.com/streamingfast/substreams-sink-sql/releases/download/protodefs-v1.0.7/substreams-sink-sql-protodefs-v1.0.7.spkg
 
   # DCA.fun Substreams
-  dca_dot_fun: https://github.com/pinax-network/substreams-dca-dot-fun/releases/download/v0.1.0/dca-dot-fun-v0.1.0.spkg
+  dca_dot_fun: https://github.com/pinax-network/substreams-dca-dot-fun/releases/download/v0.1.1/dca-dot-fun-v0.1.1.spkg
 
 binaries:
   default:
