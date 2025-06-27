@@ -6,6 +6,9 @@ package:
   description: DCA.fun events
   image: ../image.png
 
+imports:
+  ethereum_common: https://github.com/streamingfast/substreams-foundational-modules/releases/download/ethereum-common-v0.3.3/ethereum-common-v0.3.3.spkg
+
 protobuf:
   files:
     - dca-dot-fun.proto
@@ -23,8 +26,12 @@ modules:
     inputs:
       - params: string
       - source: sf.ethereum.type.v2.Block
+    blockFilter:
+      module: ethereum_common:index_events
+      query:
+        string: "evt_addr:0xdca0f9f6a27b48a097561fa3e52dbc3bad21f88f || evt_addr:0xdca0df1ca04143a10ed7a8a8354e51228eb8c41e"
     output:
       type: proto:dca.dot.fun.v1.Events
 
 params:
-  map_events: 0xDCA0F9f6a27b48a097561FA3E52DBC3BAD21F88f # DCA.fun contract address
+  map_events: 0xdca0f9f6a27b48a097561fa3e52dbc3bad21f88f # DCA.fun contract address
