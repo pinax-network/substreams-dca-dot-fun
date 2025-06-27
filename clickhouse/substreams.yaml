@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: clickhouse_dca_dot_fun
-  version: v0.1.1
+  version: v0.1.2
   url: https://github.com/pinax-network/substreams-dca-dot-fun
   description: Clickhouse for DCA.fun
   image: ../image.png
@@ -12,7 +12,7 @@ imports:
   sql: https://github.com/streamingfast/substreams-sink-sql/releases/download/protodefs-v1.0.7/substreams-sink-sql-protodefs-v1.0.7.spkg
 
   # DCA.fun Substreams
-  dca_dot_fun: https://github.com/pinax-network/substreams-dca-dot-fun/releases/download/v0.1.1/dca-dot-fun-v0.1.1.spkg
+  dca_dot_fun: https://github.com/pinax-network/substreams-dca-dot-fun/releases/download/v0.1.2/dca-dot-fun-v0.1.2.spkg
 
 binaries:
   default:
