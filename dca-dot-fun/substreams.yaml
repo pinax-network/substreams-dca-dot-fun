@@ -27,4 +27,4 @@ modules:
       type: proto:dca.dot.fun.v1.Events
 
 params:
-  map_events: 0xdCa0DF1ca04143A10Ed7a8A8354E51228Eb8c41e # DCA.fun contract address
+  map_events: 0xDCA0F9f6a27b48a097561FA3E52DBC3BAD21F88f # DCA.fun contract address

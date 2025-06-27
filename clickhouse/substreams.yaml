@@ -38,3 +38,6 @@ sink:
       enabled: false
 
 network: mainnet
+
+params:
+  dca_dot_fun:map_events: 0xDCA0F9f6a27b48a097561FA3E52DBC3BAD21F88f # DCA.fun contract address
