@@ -17,17 +17,18 @@ message Events {
   repeated PauseFill    pause_fill    = 5;
 
   // ─────────────── Strategy & Protocol Configuration ──────────────
-  repeated SetExecutionVarience           set_execution_varience            = 6;
   repeated SetFeeCollector                set_fee_collector                 = 7;
-  repeated SetMaxFeedAgeFillOrder         set_max_feed_age_fill_order       = 8;
-  repeated SetMaxFeedAgeCreateOrder       set_max_feed_age_create_order     = 9;
-  repeated SetMaxScalingFactor            set_max_scaling_factor            = 10;
-  repeated SetMaxSlippage                 set_max_slippage                  = 11;
+  repeated SetMaxFeedAge                  set_max_feed_age                  = 8;
+  repeated SetMaxScalingInterval          set_max_scaling_interval          = 10;
   repeated SetMinExecutionValue           set_min_execution_value           = 12;
   repeated SetMinOrderFrequencyInterval   set_min_order_frequency_interval  = 13;
-  repeated SetMinSlippage                 set_min_slippage                  = 14;
+  repeated SetMinMaxSlippage              set_min_max_slippage              = 14;
   repeated SetYieldSplit                  set_yield_split                   = 15;
   repeated SetProtocolFee                 set_protocol_fee                  = 16;
+  repeated SetTimestampTolerance          set_timestamp_tolerance           = 23;
+  repeated SetVaultFactory                set_vault_factory                 = 24;
+  repeated SetVerifierDotFun              set_verifier_dot_fun              = 25;
+  repeated SetNativeToken                 set_native_token                  = 26;
 
   // ─────────────────────── Token-Specific Events ───────────────────
   repeated SetTokenProps  set_token_props  = 17;
@@ -94,13 +95,14 @@ message FillOrder {
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
   string order_id = 5;                    // uint256
-  bytes recipient = 6;
-  string fill_amount = 7;                 // uint256
-  string amount_of_token_out = 8;         // uint256
-  string protocol_fee = 9;
-  string token_in_price = 10;             // uint256
-  string token_out_price = 11;            // uint256
-  string scaling_factor = 12;             // uint256
+  bytes event_caller = 6;                 // from event data
+  bytes recipient = 7;
+  string fill_amount = 8;                 // uint256
+  string amount_of_token_out = 9;         // uint256
+  string protocol_fee = 10;
+  string token_in_price = 11;             // uint256
+  string token_out_price = 12;            // uint256
+  string scaling_factor = 13;             // uint256
 }
 
 // ╔═══════════════════════════════════════════════════════════╗
@@ -133,18 +135,6 @@ message PauseFill {
 // ╔═══════════════════════════════════════════════════════════╗
 //           STRATEGY & PROTOCOL CONFIGURATION EVENTS
 // ╚═══════════════════════════════════════════════════════════╝
-message SetExecutionVarience {
-  // -- transaction --
-  bytes tx_hash = 1;
-  // -- caller --
-  optional bytes caller = 2;              // call.caller
-  // -- log --
-  bytes contract = 3;                     // log.address
-  uint64 ordinal = 4;                     // log.ordinal
-  // -- event --
-  string execution_varience = 5;          // uint256
-}
-
 message SetFeeCollector {
   // -- transaction --
   bytes tx_hash = 1;
@@ -157,7 +147,7 @@ message SetFeeCollector {
   bytes fee_collector = 5;
 }
 
-message SetMaxFeedAgeFillOrder {
+message SetMaxFeedAge {
   // -- transaction --
   bytes tx_hash = 1;
   // -- caller --
@@ -166,10 +156,11 @@ message SetMaxFeedAgeFillOrder {
   bytes contract = 3;                     // log.address
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  string max_feed_age = 5;                // uint256
+  string max_feed_age_create_order = 5;   // uint256
+  string max_feed_age_fill_order = 6;     // uint256
 }
 
-message SetMaxFeedAgeCreateOrder {
+message SetMaxScalingInterval {
   // -- transaction --
   bytes tx_hash = 1;
   // -- caller --
@@ -178,31 +169,7 @@ message SetMaxFeedAgeCreateOrder {
   bytes contract = 3;                     // log.address
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
-  string max_feed_age = 5;                // uint256
-}
-
-message SetMaxScalingFactor {
-  // -- transaction --
-  bytes tx_hash = 1;
-  // -- caller --
-  optional bytes caller = 2;              // call.caller
-  // -- log --
-  bytes contract = 3;                     // log.address
-  uint64 ordinal = 4;                     // log.ordinal
-  // -- event --
-  string max_scaling_factor = 5;          // uint256
-}
-
-message SetMaxSlippage {
-  // -- transaction --
-  bytes tx_hash = 1;
-  // -- caller --
-  optional bytes caller = 2;              // call.caller
-  // -- log --
-  bytes contract = 3;                     // log.address
-  uint64 ordinal = 4;                     // log.ordinal
-  // -- event --
-  string slippage_max = 5;                // uint256
+  string max_scaling_interval = 5;        // uint256
 }
 
 message SetMinExecutionValue {
@@ -215,6 +182,7 @@ message SetMinExecutionValue {
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
   string min_execution_value = 5;         // uint256
+  string execution_variance = 6;          // uint256
 }
 
 message SetMinOrderFrequencyInterval {
@@ -229,7 +197,7 @@ message SetMinOrderFrequencyInterval {
   string min_order_frequency_interval = 5;// uint256
 }
 
-message SetMinSlippage {
+message SetMinMaxSlippage {
   // -- transaction --
   bytes tx_hash = 1;
   // -- caller --
@@ -239,6 +207,7 @@ message SetMinSlippage {
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
   string slippage_min = 5;                // uint256
+  string slippage_max = 6;                // uint256
 }
 
 message SetYieldSplit {
@@ -263,6 +232,58 @@ message SetProtocolFee {
   uint64 ordinal = 4;                     // log.ordinal
   // -- event --
   string protocol_fee = 5;
+}
+
+message SetTimestampTolerance {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  string timestamp_tolerance = 5;         // uint256
+}
+
+message SetVaultFactory {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes vault_factory = 5;
+}
+
+message SetVerifierDotFun {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes verifier_dot_fun = 5;
+}
+
+message SetNativeToken {
+  // -- transaction --
+  bytes tx_hash = 1;
+  // -- caller --
+  optional bytes caller = 2;              // call.caller
+  // -- log --
+  bytes contract = 3;                     // log.address
+  uint64 ordinal = 4;                     // log.ordinal
+  // -- event --
+  bytes wrapped_native = 5;
+  bytes native_token = 6;
+  bytes native_token_feed = 7;            // bytes32
+  uint64 native_token_decimals = 8;       // uint8
+  bool native_token_is_stakable = 9;
 }
 
 // ╔═══════════════════════════════════════════════════════════╗

@@ -28,6 +28,7 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
                     contract: log.address.to_vec(),
                     // -- event --
                     order_id: event.order_id.to_string(),
+                    event_caller: event.caller.to_vec(),
                     recipient: event.recipient.to_vec(),
                     fill_amount: event.fill_amount.to_string(),
                     amount_of_token_out: event.amount_of_token_out.to_string(),
@@ -115,23 +116,7 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
             }
 
             // ───── Strategy & Protocol Configuration Events ─────
-            // -- SetExecutionVarience --
-            if let Some(event) = events::SetExecutionVarience::match_and_decode(log) {
-                events
-                    .set_execution_varience
-                    .push(dca_dot_fun::SetExecutionVarience {
-                        // -- transaction --
-                        tx_hash: trx.hash.to_vec(),
-                        // -- call --
-                        caller: caller.clone(),
-                        // -- log --
-                        ordinal: log.ordinal,
-                        contract: log.address.to_vec(),
-                        // -- event --
-                        execution_varience: event.execution_varience.to_string(),
-                    });
-            }
-
+            
             // -- SetFeeCollector --
             if let Some(event) = events::SetFeeCollector::match_and_decode(log) {
                 events.set_fee_collector.push(dca_dot_fun::SetFeeCollector {
@@ -147,60 +132,9 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
                 });
             }
 
-            // -- SetMaxFeedAgeFillOrder --
-            if let Some(event) = events::SetMaxFeedAgeFillOrder::match_and_decode(log) {
-                events
-                    .set_max_feed_age_fill_order
-                    .push(dca_dot_fun::SetMaxFeedAgeFillOrder {
-                        // -- transaction --
-                        tx_hash: trx.hash.to_vec(),
-                        // -- call --
-                        caller: caller.clone(),
-                        // -- log --
-                        ordinal: log.ordinal,
-                        contract: log.address.to_vec(),
-                        // -- event --
-                        max_feed_age: event.max_feed_age.to_string(),
-                    });
-            }
-
-            // -- SetMaxFeedAgeCreateOrder --
-            if let Some(event) = events::SetMaxFeedAgeCreateOrder::match_and_decode(log) {
-                events
-                    .set_max_feed_age_create_order
-                    .push(dca_dot_fun::SetMaxFeedAgeCreateOrder {
-                        // -- transaction --
-                        tx_hash: trx.hash.to_vec(),
-                        // -- call --
-                        caller: caller.clone(),
-                        // -- log --
-                        ordinal: log.ordinal,
-                        contract: log.address.to_vec(),
-                        // -- event --
-                        max_feed_age: event.max_feed_age.to_string(),
-                    });
-            }
-
-            // -- SetMaxScalingFactor --
-            if let Some(event) = events::SetMaxScalingFactor::match_and_decode(log) {
-                events
-                    .set_max_scaling_factor
-                    .push(dca_dot_fun::SetMaxScalingFactor {
-                        // -- transaction --
-                        tx_hash: trx.hash.to_vec(),
-                        // -- call --
-                        caller: caller.clone(),
-                        // -- log --
-                        ordinal: log.ordinal,
-                        contract: log.address.to_vec(),
-                        // -- event --
-                        max_scaling_factor: event.max_scaling_factor.to_string(),
-                    });
-            }
-
-            // -- SetMaxSlippage --
-            if let Some(event) = events::SetMaxSlippage::match_and_decode(log) {
-                events.set_max_slippage.push(dca_dot_fun::SetMaxSlippage {
+            // -- SetMaxFeedAge --
+            if let Some(event) = events::SetMaxFeedAge::match_and_decode(log) {
+                events.set_max_feed_age.push(dca_dot_fun::SetMaxFeedAge {
                     // -- transaction --
                     tx_hash: trx.hash.to_vec(),
                     // -- call --
@@ -209,8 +143,26 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
                     ordinal: log.ordinal,
                     contract: log.address.to_vec(),
                     // -- event --
-                    slippage_max: event.slippage_max.to_string(),
+                    max_feed_age_create_order: event.max_feed_age_create_order.to_string(),
+                    max_feed_age_fill_order: event.max_feed_age_fill_order.to_string(),
                 });
+            }
+
+            // -- SetMaxScalingInterval --
+            if let Some(event) = events::SetMaxScalingInterval::match_and_decode(log) {
+                events
+                    .set_max_scaling_interval
+                    .push(dca_dot_fun::SetMaxScalingInterval {
+                        // -- transaction --
+                        tx_hash: trx.hash.to_vec(),
+                        // -- call --
+                        caller: caller.clone(),
+                        // -- log --
+                        ordinal: log.ordinal,
+                        contract: log.address.to_vec(),
+                        // -- event --
+                        max_scaling_interval: event.max_scaling_interval.to_string(),
+                    });
             }
 
             // -- SetMinExecutionValue --
@@ -227,6 +179,7 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
                         contract: log.address.to_vec(),
                         // -- event --
                         min_execution_value: event.min_execution_value.to_string(),
+                        execution_variance: event.execution_variance.to_string(),
                     });
             }
 
@@ -247,9 +200,9 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
                     });
             }
 
-            // -- SetMinSlippage --
-            if let Some(event) = events::SetMinSlippage::match_and_decode(log) {
-                events.set_min_slippage.push(dca_dot_fun::SetMinSlippage {
+            // -- SetMinMaxSlippage --
+            if let Some(event) = events::SetMinMaxSlippage::match_and_decode(log) {
+                events.set_min_max_slippage.push(dca_dot_fun::SetMinMaxSlippage {
                     // -- transaction --
                     tx_hash: trx.hash.to_vec(),
                     // -- call --
@@ -259,6 +212,7 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
                     contract: log.address.to_vec(),
                     // -- event --
                     slippage_min: event.slippage_min.to_string(),
+                    slippage_max: event.slippage_max.to_string(),
                 });
             }
 
@@ -289,6 +243,70 @@ fn map_events(params: String, block: Block) -> Result<dca_dot_fun::Events, subst
                     contract: log.address.to_vec(),
                     // -- event --
                     protocol_fee: event.protocol_fee.to_string(),
+                });
+            }
+
+            // -- SetTimestampTolerance --
+            if let Some(event) = events::SetTimestampTolerance::match_and_decode(log) {
+                events.set_timestamp_tolerance.push(dca_dot_fun::SetTimestampTolerance {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    timestamp_tolerance: event.timestamp_tolerance.to_string(),
+                });
+            }
+
+            // -- SetVaultFactory --
+            if let Some(event) = events::SetVaultFactory::match_and_decode(log) {
+                events.set_vault_factory.push(dca_dot_fun::SetVaultFactory {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    vault_factory: event.vault_factory.to_vec(),
+                });
+            }
+
+            // -- SetVerifierDotFun --
+            if let Some(event) = events::SetVerifierDotFun::match_and_decode(log) {
+                events.set_verifier_dot_fun.push(dca_dot_fun::SetVerifierDotFun {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    verifier_dot_fun: event.verifier_dot_fun.to_vec(),
+                });
+            }
+
+            // -- SetNativeToken --
+            if let Some(event) = events::SetNativeToken::match_and_decode(log) {
+                events.set_native_token.push(dca_dot_fun::SetNativeToken {
+                    // -- transaction --
+                    tx_hash: trx.hash.to_vec(),
+                    // -- call --
+                    caller: caller.clone(),
+                    // -- log --
+                    ordinal: log.ordinal,
+                    contract: log.address.to_vec(),
+                    // -- event --
+                    wrapped_native: event.wrapped_native.to_vec(),
+                    native_token: event.native_token.to_vec(),
+                    native_token_feed: event.native_token_feed.to_vec(),
+                    native_token_decimals: event.native_token_decimals.to_u64(),
+                    native_token_is_stakable: event.native_token_is_stakable,
                 });
             }
 

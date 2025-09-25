@@ -55,6 +55,7 @@ pub fn db_out(
         let row = tables
             .create_row("fill_order", common_key(&clock, index))
             .set("order_id", &e.order_id)
+            .set("event_caller", bytes_to_hex(&e.event_caller))
             .set("recipient", bytes_to_hex(&e.recipient))
             .set("fill_amount", &e.fill_amount)
             .set("amount_of_token_out", &e.amount_of_token_out)
@@ -86,14 +87,6 @@ pub fn db_out(
 
     /* ───── Strategy & Protocol Configuration Events ───── */
 
-    for e in events.set_execution_varience {
-        let row = tables
-            .create_row("set_execution_varience", common_key(&clock, index))
-            .set("execution_varience", &e.execution_varience);
-        set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
-        index += 1;
-    }
-
     for e in events.set_fee_collector {
         let row = tables
             .create_row("set_fee_collector", common_key(&clock, index))
@@ -102,34 +95,19 @@ pub fn db_out(
         index += 1;
     }
 
-    for e in events.set_max_feed_age_fill_order {
+    for e in events.set_max_feed_age {
         let row = tables
-            .create_row("set_max_feed_age_fill_order", common_key(&clock, index))
-            .set("max_feed_age", &e.max_feed_age);
+            .create_row("set_max_feed_age", common_key(&clock, index))
+            .set("max_feed_age_create_order", &e.max_feed_age_create_order)
+            .set("max_feed_age_fill_order", &e.max_feed_age_fill_order);
         set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
         index += 1;
     }
 
-    for e in events.set_max_feed_age_create_order {
+    for e in events.set_max_scaling_interval {
         let row = tables
-            .create_row("set_max_feed_age_create_order", common_key(&clock, index))
-            .set("max_feed_age", &e.max_feed_age);
-        set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
-        index += 1;
-    }
-
-    for e in events.set_max_scaling_factor {
-        let row = tables
-            .create_row("set_max_scaling_factor", common_key(&clock, index))
-            .set("max_scaling_factor", &e.max_scaling_factor);
-        set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
-        index += 1;
-    }
-
-    for e in events.set_max_slippage {
-        let row = tables
-            .create_row("set_max_slippage", common_key(&clock, index))
-            .set("slippage_max", &e.slippage_max);
+            .create_row("set_max_scaling_interval", common_key(&clock, index))
+            .set("max_scaling_interval", &e.max_scaling_interval);
         set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
         index += 1;
     }
@@ -137,7 +115,8 @@ pub fn db_out(
     for e in events.set_min_execution_value {
         let row = tables
             .create_row("set_min_execution_value", common_key(&clock, index))
-            .set("min_execution_value", &e.min_execution_value);
+            .set("min_execution_value", &e.min_execution_value)
+            .set("execution_variance", &e.execution_variance);
         set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
         index += 1;
     }
@@ -150,10 +129,11 @@ pub fn db_out(
         index += 1;
     }
 
-    for e in events.set_min_slippage {
+    for e in events.set_min_max_slippage {
         let row = tables
-            .create_row("set_min_slippage", common_key(&clock, index))
-            .set("slippage_min", &e.slippage_min);
+            .create_row("set_min_max_slippage", common_key(&clock, index))
+            .set("slippage_min", &e.slippage_min)
+            .set("slippage_max", &e.slippage_max);
         set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
         index += 1;
     }
@@ -170,6 +150,42 @@ pub fn db_out(
         let row = tables
             .create_row("set_protocol_fee", common_key(&clock, index))
             .set("protocol_fee", e.protocol_fee);
+        set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
+        index += 1;
+    }
+
+    for e in events.set_timestamp_tolerance {
+        let row = tables
+            .create_row("set_timestamp_tolerance", common_key(&clock, index))
+            .set("timestamp_tolerance", &e.timestamp_tolerance);
+        set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
+        index += 1;
+    }
+
+    for e in events.set_vault_factory {
+        let row = tables
+            .create_row("set_vault_factory", common_key(&clock, index))
+            .set("vault_factory", bytes_to_hex(&e.vault_factory));
+        set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
+        index += 1;
+    }
+
+    for e in events.set_verifier_dot_fun {
+        let row = tables
+            .create_row("set_verifier_dot_fun", common_key(&clock, index))
+            .set("verifier_dot_fun", bytes_to_hex(&e.verifier_dot_fun));
+        set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
+        index += 1;
+    }
+
+    for e in events.set_native_token {
+        let row = tables
+            .create_row("set_native_token", common_key(&clock, index))
+            .set("wrapped_native", bytes_to_hex(&e.wrapped_native))
+            .set("native_token", bytes_to_hex(&e.native_token))
+            .set("native_token_feed", bytes_to_hex(&e.native_token_feed))
+            .set("native_token_decimals", e.native_token_decimals)
+            .set("native_token_is_stakable", e.native_token_is_stakable);
         set_log(&clock, index, e.tx_hash, e.contract, e.ordinal, e.caller, row);
         index += 1;
     }
