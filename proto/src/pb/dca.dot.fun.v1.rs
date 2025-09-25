@@ -19,28 +19,30 @@ pub struct Events {
     #[prost(message, repeated, tag="5")]
     pub pause_fill: ::prost::alloc::vec::Vec<PauseFill>,
     /// ─────────────── Strategy & Protocol Configuration ──────────────
-    #[prost(message, repeated, tag="6")]
-    pub set_execution_varience: ::prost::alloc::vec::Vec<SetExecutionVarience>,
     #[prost(message, repeated, tag="7")]
     pub set_fee_collector: ::prost::alloc::vec::Vec<SetFeeCollector>,
     #[prost(message, repeated, tag="8")]
-    pub set_max_feed_age_fill_order: ::prost::alloc::vec::Vec<SetMaxFeedAgeFillOrder>,
-    #[prost(message, repeated, tag="9")]
-    pub set_max_feed_age_create_order: ::prost::alloc::vec::Vec<SetMaxFeedAgeCreateOrder>,
+    pub set_max_feed_age: ::prost::alloc::vec::Vec<SetMaxFeedAge>,
     #[prost(message, repeated, tag="10")]
-    pub set_max_scaling_factor: ::prost::alloc::vec::Vec<SetMaxScalingFactor>,
-    #[prost(message, repeated, tag="11")]
-    pub set_max_slippage: ::prost::alloc::vec::Vec<SetMaxSlippage>,
+    pub set_max_scaling_interval: ::prost::alloc::vec::Vec<SetMaxScalingInterval>,
     #[prost(message, repeated, tag="12")]
     pub set_min_execution_value: ::prost::alloc::vec::Vec<SetMinExecutionValue>,
     #[prost(message, repeated, tag="13")]
     pub set_min_order_frequency_interval: ::prost::alloc::vec::Vec<SetMinOrderFrequencyInterval>,
     #[prost(message, repeated, tag="14")]
-    pub set_min_slippage: ::prost::alloc::vec::Vec<SetMinSlippage>,
+    pub set_min_max_slippage: ::prost::alloc::vec::Vec<SetMinMaxSlippage>,
     #[prost(message, repeated, tag="15")]
     pub set_yield_split: ::prost::alloc::vec::Vec<SetYieldSplit>,
     #[prost(message, repeated, tag="16")]
     pub set_protocol_fee: ::prost::alloc::vec::Vec<SetProtocolFee>,
+    #[prost(message, repeated, tag="23")]
+    pub set_timestamp_tolerance: ::prost::alloc::vec::Vec<SetTimestampTolerance>,
+    #[prost(message, repeated, tag="24")]
+    pub set_vault_factory: ::prost::alloc::vec::Vec<SetVaultFactory>,
+    #[prost(message, repeated, tag="25")]
+    pub set_verifier_dot_fun: ::prost::alloc::vec::Vec<SetVerifierDotFun>,
+    #[prost(message, repeated, tag="26")]
+    pub set_native_token: ::prost::alloc::vec::Vec<SetNativeToken>,
     /// ─────────────────────── Token-Specific Events ───────────────────
     #[prost(message, repeated, tag="17")]
     pub set_token_props: ::prost::alloc::vec::Vec<SetTokenProps>,
@@ -170,28 +172,31 @@ pub struct FillOrder {
     /// uint256
     #[prost(string, tag="5")]
     pub order_id: ::prost::alloc::string::String,
+    /// from event data
     #[prost(bytes="vec", tag="6")]
+    pub event_caller: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes="vec", tag="7")]
     pub recipient: ::prost::alloc::vec::Vec<u8>,
     /// uint256
-    #[prost(string, tag="7")]
+    #[prost(string, tag="8")]
     pub fill_amount: ::prost::alloc::string::String,
     /// uint256
-    #[prost(string, tag="8")]
-    pub amount_of_token_out: ::prost::alloc::string::String,
     #[prost(string, tag="9")]
+    pub amount_of_token_out: ::prost::alloc::string::String,
+    #[prost(string, tag="10")]
     pub protocol_fee: ::prost::alloc::string::String,
     /// uint256
-    #[prost(string, tag="10")]
+    #[prost(string, tag="11")]
     pub token_in_price: ::prost::alloc::string::String,
     /// uint256
-    #[prost(string, tag="11")]
+    #[prost(string, tag="12")]
     pub token_out_price: ::prost::alloc::string::String,
     /// uint256
-    #[prost(string, tag="12")]
+    #[prost(string, tag="13")]
     pub scaling_factor: ::prost::alloc::string::String,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
-///                    PAUSE / CIRCUIT-BREAKER EVENTS
+///                   PAUSE / CIRCUIT-BREAKER EVENTS
 /// ╚═══════════════════════════════════════════════════════════╝
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -240,33 +245,8 @@ pub struct PauseFill {
     pub is_paused: bool,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
-///            STRATEGY & PROTOCOL CONFIGURATION EVENTS
+///           STRATEGY & PROTOCOL CONFIGURATION EVENTS
 /// ╚═══════════════════════════════════════════════════════════╝
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SetExecutionVarience {
-    /// -- transaction --
-    #[prost(bytes="vec", tag="1")]
-    pub tx_hash: ::prost::alloc::vec::Vec<u8>,
-    /// -- caller --
-    ///
-    /// call.caller
-    #[prost(bytes="vec", optional, tag="2")]
-    pub caller: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    /// -- log --
-    ///
-    /// log.address
-    #[prost(bytes="vec", tag="3")]
-    pub contract: ::prost::alloc::vec::Vec<u8>,
-    /// log.ordinal
-    #[prost(uint64, tag="4")]
-    pub ordinal: u64,
-    /// -- event --
-    ///
-    /// uint256
-    #[prost(string, tag="5")]
-    pub execution_varience: ::prost::alloc::string::String,
-}
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetFeeCollector {
@@ -292,7 +272,7 @@ pub struct SetFeeCollector {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SetMaxFeedAgeFillOrder {
+pub struct SetMaxFeedAge {
     /// -- transaction --
     #[prost(bytes="vec", tag="1")]
     pub tx_hash: ::prost::alloc::vec::Vec<u8>,
@@ -313,11 +293,14 @@ pub struct SetMaxFeedAgeFillOrder {
     ///
     /// uint256
     #[prost(string, tag="5")]
-    pub max_feed_age: ::prost::alloc::string::String,
+    pub max_feed_age_create_order: ::prost::alloc::string::String,
+    /// uint256
+    #[prost(string, tag="6")]
+    pub max_feed_age_fill_order: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SetMaxFeedAgeCreateOrder {
+pub struct SetMaxScalingInterval {
     /// -- transaction --
     #[prost(bytes="vec", tag="1")]
     pub tx_hash: ::prost::alloc::vec::Vec<u8>,
@@ -338,57 +321,7 @@ pub struct SetMaxFeedAgeCreateOrder {
     ///
     /// uint256
     #[prost(string, tag="5")]
-    pub max_feed_age: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SetMaxScalingFactor {
-    /// -- transaction --
-    #[prost(bytes="vec", tag="1")]
-    pub tx_hash: ::prost::alloc::vec::Vec<u8>,
-    /// -- caller --
-    ///
-    /// call.caller
-    #[prost(bytes="vec", optional, tag="2")]
-    pub caller: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    /// -- log --
-    ///
-    /// log.address
-    #[prost(bytes="vec", tag="3")]
-    pub contract: ::prost::alloc::vec::Vec<u8>,
-    /// log.ordinal
-    #[prost(uint64, tag="4")]
-    pub ordinal: u64,
-    /// -- event --
-    ///
-    /// uint256
-    #[prost(string, tag="5")]
-    pub max_scaling_factor: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SetMaxSlippage {
-    /// -- transaction --
-    #[prost(bytes="vec", tag="1")]
-    pub tx_hash: ::prost::alloc::vec::Vec<u8>,
-    /// -- caller --
-    ///
-    /// call.caller
-    #[prost(bytes="vec", optional, tag="2")]
-    pub caller: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    /// -- log --
-    ///
-    /// log.address
-    #[prost(bytes="vec", tag="3")]
-    pub contract: ::prost::alloc::vec::Vec<u8>,
-    /// log.ordinal
-    #[prost(uint64, tag="4")]
-    pub ordinal: u64,
-    /// -- event --
-    ///
-    /// uint256
-    #[prost(string, tag="5")]
-    pub slippage_max: ::prost::alloc::string::String,
+    pub max_scaling_interval: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -414,6 +347,9 @@ pub struct SetMinExecutionValue {
     /// uint256
     #[prost(string, tag="5")]
     pub min_execution_value: ::prost::alloc::string::String,
+    /// uint256
+    #[prost(string, tag="6")]
+    pub execution_variance: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -442,7 +378,7 @@ pub struct SetMinOrderFrequencyInterval {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SetMinSlippage {
+pub struct SetMinMaxSlippage {
     /// -- transaction --
     #[prost(bytes="vec", tag="1")]
     pub tx_hash: ::prost::alloc::vec::Vec<u8>,
@@ -464,6 +400,9 @@ pub struct SetMinSlippage {
     /// uint256
     #[prost(string, tag="5")]
     pub slippage_min: ::prost::alloc::string::String,
+    /// uint256
+    #[prost(string, tag="6")]
+    pub slippage_max: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -513,8 +452,112 @@ pub struct SetProtocolFee {
     #[prost(string, tag="5")]
     pub protocol_fee: ::prost::alloc::string::String,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SetTimestampTolerance {
+    /// -- transaction --
+    #[prost(bytes="vec", tag="1")]
+    pub tx_hash: ::prost::alloc::vec::Vec<u8>,
+    /// -- caller --
+    ///
+    /// call.caller
+    #[prost(bytes="vec", optional, tag="2")]
+    pub caller: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// -- log --
+    ///
+    /// log.address
+    #[prost(bytes="vec", tag="3")]
+    pub contract: ::prost::alloc::vec::Vec<u8>,
+    /// log.ordinal
+    #[prost(uint64, tag="4")]
+    pub ordinal: u64,
+    /// -- event --
+    ///
+    /// uint256
+    #[prost(string, tag="5")]
+    pub timestamp_tolerance: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SetVaultFactory {
+    /// -- transaction --
+    #[prost(bytes="vec", tag="1")]
+    pub tx_hash: ::prost::alloc::vec::Vec<u8>,
+    /// -- caller --
+    ///
+    /// call.caller
+    #[prost(bytes="vec", optional, tag="2")]
+    pub caller: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// -- log --
+    ///
+    /// log.address
+    #[prost(bytes="vec", tag="3")]
+    pub contract: ::prost::alloc::vec::Vec<u8>,
+    /// log.ordinal
+    #[prost(uint64, tag="4")]
+    pub ordinal: u64,
+    /// -- event --
+    #[prost(bytes="vec", tag="5")]
+    pub vault_factory: ::prost::alloc::vec::Vec<u8>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SetVerifierDotFun {
+    /// -- transaction --
+    #[prost(bytes="vec", tag="1")]
+    pub tx_hash: ::prost::alloc::vec::Vec<u8>,
+    /// -- caller --
+    ///
+    /// call.caller
+    #[prost(bytes="vec", optional, tag="2")]
+    pub caller: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// -- log --
+    ///
+    /// log.address
+    #[prost(bytes="vec", tag="3")]
+    pub contract: ::prost::alloc::vec::Vec<u8>,
+    /// log.ordinal
+    #[prost(uint64, tag="4")]
+    pub ordinal: u64,
+    /// -- event --
+    #[prost(bytes="vec", tag="5")]
+    pub verifier_dot_fun: ::prost::alloc::vec::Vec<u8>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SetNativeToken {
+    /// -- transaction --
+    #[prost(bytes="vec", tag="1")]
+    pub tx_hash: ::prost::alloc::vec::Vec<u8>,
+    /// -- caller --
+    ///
+    /// call.caller
+    #[prost(bytes="vec", optional, tag="2")]
+    pub caller: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// -- log --
+    ///
+    /// log.address
+    #[prost(bytes="vec", tag="3")]
+    pub contract: ::prost::alloc::vec::Vec<u8>,
+    /// log.ordinal
+    #[prost(uint64, tag="4")]
+    pub ordinal: u64,
+    /// -- event --
+    #[prost(bytes="vec", tag="5")]
+    pub wrapped_native: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes="vec", tag="6")]
+    pub native_token: ::prost::alloc::vec::Vec<u8>,
+    /// bytes32
+    #[prost(bytes="vec", tag="7")]
+    pub native_token_feed: ::prost::alloc::vec::Vec<u8>,
+    /// uint8
+    #[prost(uint64, tag="8")]
+    pub native_token_decimals: u64,
+    #[prost(bool, tag="9")]
+    pub native_token_is_stakable: bool,
+}
 /// ╔═══════════════════════════════════════════════════════════╗
-///                         TOKEN CONFIGURATION
+///                        TOKEN CONFIGURATION
 /// ╚═══════════════════════════════════════════════════════════╝
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -671,7 +714,7 @@ pub struct RoleRevoked {
     pub sender: ::prost::alloc::vec::Vec<u8>,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
-///             EXTERNAL INTEGRATIONS & ADAPTER CONFIGS
+///            EXTERNAL INTEGRATIONS & ADAPTER CONFIGS
 /// ╚═══════════════════════════════════════════════════════════╝
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
