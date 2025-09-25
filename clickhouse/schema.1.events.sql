@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS fill_order (
 
     -- event --
     order_id            UInt256,
+    event_caller        FixedString(42),
     recipient           FixedString(42),
     fill_amount         UInt256,
     amount_of_token_out UInt256,
@@ -138,6 +139,7 @@ CREATE TABLE IF NOT EXISTS fill_order (
 
     /* indexes (event) --------------------------------------- */
     INDEX idx_order_id         (order_id)            TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_event_caller     (event_caller)        TYPE bloom_filter GRANULARITY 4,
     INDEX idx_recipient        (recipient)           TYPE bloom_filter GRANULARITY 4,
     INDEX idx_fill_amount      (fill_amount)         TYPE bloom_filter GRANULARITY 4,
     INDEX idx_amount_out       (amount_of_token_out) TYPE bloom_filter GRANULARITY 4,
@@ -223,41 +225,6 @@ ORDER BY (timestamp, block_num, `index`);
 
 /* ╔══ STRATEGY & PROTOCOL CONFIGURATION EVENTS (UInt256) ══╗ */
 
-/* SetExecutionVarience */
-CREATE TABLE IF NOT EXISTS set_execution_varience (
-    -- block --
-    block_num   UInt32,
-    block_hash  FixedString(66),
-    timestamp   DateTime(0, 'UTC'),
-
-    -- ordering --
-    ordinal          UInt64,
-    `index`          UInt64,
-    global_sequence  UInt64,
-
-    -- transaction --
-    tx_hash   FixedString(66),
-
-    -- call --
-    caller    FixedString(42),
-
-    -- log --
-    contract  FixedString(42),
-
-    -- event --
-    execution_varience UInt256,
-
-    /* indexes (base) ---------------------------------------- */
-    INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
-    INDEX idx_caller    (caller)    TYPE bloom_filter GRANULARITY 4,
-    INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
-
-    /* indexes (event) --------------------------------------- */
-    INDEX idx_execution_varience (execution_varience) TYPE bloom_filter GRANULARITY 4
-) ENGINE = ReplacingMergeTree
-PRIMARY KEY (timestamp, block_num, `index`)
-ORDER BY (timestamp, block_num, `index`);
-
 /* SetFeeCollector */
 CREATE TABLE IF NOT EXISTS set_fee_collector (
     -- block --
@@ -293,8 +260,8 @@ CREATE TABLE IF NOT EXISTS set_fee_collector (
 PRIMARY KEY (timestamp, block_num, `index`)
 ORDER BY (timestamp, block_num, `index`);
 
-/* SetMaxFeedAgeFillOrder */
-CREATE TABLE IF NOT EXISTS set_max_feed_age_fill_order (
+/* SetMaxFeedAge */
+CREATE TABLE IF NOT EXISTS set_max_feed_age (
     -- block --
     block_num   UInt32,
     block_hash  FixedString(66),
@@ -315,7 +282,8 @@ CREATE TABLE IF NOT EXISTS set_max_feed_age_fill_order (
     contract  FixedString(42),
 
     -- event --
-    max_feed_age UInt256,
+    max_feed_age_create_order UInt256,
+    max_feed_age_fill_order UInt256,
 
     /* indexes (base) ---------------------------------------- */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -323,13 +291,14 @@ CREATE TABLE IF NOT EXISTS set_max_feed_age_fill_order (
     INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
 
     /* indexes (event) --------------------------------------- */
-    INDEX idx_max_feed_age (max_feed_age) TYPE bloom_filter GRANULARITY 4
+    INDEX idx_max_feed_age_create (max_feed_age_create_order) TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_max_feed_age_fill   (max_feed_age_fill_order)   TYPE bloom_filter GRANULARITY 4
 ) ENGINE = ReplacingMergeTree
 PRIMARY KEY (timestamp, block_num, `index`)
 ORDER BY (timestamp, block_num, `index`);
 
-/* SetMaxFeedAgeCreateOrder */
-CREATE TABLE IF NOT EXISTS set_max_feed_age_create_order (
+/* SetMaxScalingInterval */
+CREATE TABLE IF NOT EXISTS set_max_scaling_interval (
     -- block --
     block_num   UInt32,
     block_hash  FixedString(66),
@@ -350,7 +319,7 @@ CREATE TABLE IF NOT EXISTS set_max_feed_age_create_order (
     contract  FixedString(42),
 
     -- event --
-    max_feed_age UInt256,
+    max_scaling_interval UInt256,
 
     /* indexes (base) */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -358,77 +327,7 @@ CREATE TABLE IF NOT EXISTS set_max_feed_age_create_order (
     INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
 
     /* indexes (event) */
-    INDEX idx_max_feed_age (max_feed_age) TYPE bloom_filter GRANULARITY 4
-) ENGINE = ReplacingMergeTree
-PRIMARY KEY (timestamp, block_num, `index`)
-ORDER BY (timestamp, block_num, `index`);
-
-/* SetMaxScalingFactor */
-CREATE TABLE IF NOT EXISTS set_max_scaling_factor (
-    -- block --
-    block_num   UInt32,
-    block_hash  FixedString(66),
-    timestamp   DateTime(0, 'UTC'),
-
-    -- ordering --
-    ordinal          UInt64,
-    `index`          UInt64,
-    global_sequence  UInt64,
-
-    -- transaction --
-    tx_hash   FixedString(66),
-
-    -- call --
-    caller    FixedString(42),
-
-    -- log --
-    contract  FixedString(42),
-
-    -- event --
-    max_scaling_factor UInt256,
-
-    /* indexes (base) */
-    INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
-    INDEX idx_caller    (caller)    TYPE bloom_filter GRANULARITY 4,
-    INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
-
-    /* indexes (event) */
-    INDEX idx_max_scaling_factor (max_scaling_factor) TYPE bloom_filter GRANULARITY 4
-) ENGINE = ReplacingMergeTree
-PRIMARY KEY (timestamp, block_num, `index`)
-ORDER BY (timestamp, block_num, `index`);
-
-/* SetMaxSlippage */
-CREATE TABLE IF NOT EXISTS set_max_slippage (
-    -- block --
-    block_num   UInt32,
-    block_hash  FixedString(66),
-    timestamp   DateTime(0, 'UTC'),
-
-    -- ordering --
-    ordinal          UInt64,
-    `index`          UInt64,
-    global_sequence  UInt64,
-
-    -- transaction --
-    tx_hash   FixedString(66),
-
-    -- call --
-    caller    FixedString(42),
-
-    -- log --
-    contract  FixedString(42),
-
-    -- event --
-    max_slippage UInt256,
-
-    /* indexes (base) */
-    INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
-    INDEX idx_caller    (caller)    TYPE bloom_filter GRANULARITY 4,
-    INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
-
-    /* indexes (event) */
-    INDEX idx_max_slippage (max_slippage) TYPE bloom_filter GRANULARITY 4
+    INDEX idx_max_scaling_interval (max_scaling_interval) TYPE bloom_filter GRANULARITY 4
 ) ENGINE = ReplacingMergeTree
 PRIMARY KEY (timestamp, block_num, `index`)
 ORDER BY (timestamp, block_num, `index`);
@@ -456,6 +355,7 @@ CREATE TABLE IF NOT EXISTS set_min_execution_value (
 
     -- event --
     min_execution_value UInt256,
+    execution_variance UInt256,
 
     /* indexes (base) */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -463,7 +363,8 @@ CREATE TABLE IF NOT EXISTS set_min_execution_value (
     INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
 
     /* indexes (event) */
-    INDEX idx_min_execution_value (min_execution_value) TYPE bloom_filter GRANULARITY 4
+    INDEX idx_min_execution_value (min_execution_value) TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_execution_variance  (execution_variance)  TYPE bloom_filter GRANULARITY 4
 ) ENGINE = ReplacingMergeTree
 PRIMARY KEY (timestamp, block_num, `index`)
 ORDER BY (timestamp, block_num, `index`);
@@ -503,8 +404,8 @@ CREATE TABLE IF NOT EXISTS set_min_order_frequency_interval (
 PRIMARY KEY (timestamp, block_num, `index`)
 ORDER BY (timestamp, block_num, `index`);
 
-/* SetMinSlippage */
-CREATE TABLE IF NOT EXISTS set_min_slippage (
+/* SetMinMaxSlippage */
+CREATE TABLE IF NOT EXISTS set_min_max_slippage (
     -- block --
     block_num   UInt32,
     block_hash  FixedString(66),
@@ -525,7 +426,8 @@ CREATE TABLE IF NOT EXISTS set_min_slippage (
     contract  FixedString(42),
 
     -- event --
-    min_slippage UInt256,
+    slippage_min UInt256,
+    slippage_max UInt256,
 
     /* indexes (base) */
     INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
@@ -533,7 +435,8 @@ CREATE TABLE IF NOT EXISTS set_min_slippage (
     INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
 
     /* indexes (event) */
-    INDEX idx_min_slippage (min_slippage) TYPE bloom_filter GRANULARITY 4
+    INDEX idx_slippage_min (slippage_min) TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_slippage_max (slippage_max) TYPE bloom_filter GRANULARITY 4
 ) ENGINE = ReplacingMergeTree
 PRIMARY KEY (timestamp, block_num, `index`)
 ORDER BY (timestamp, block_num, `index`);
@@ -604,6 +507,154 @@ CREATE TABLE IF NOT EXISTS set_protocol_fee (
 
     /* indexes (event) */
     INDEX idx_protocol_fee (protocol_fee) TYPE set(128) GRANULARITY 4
+) ENGINE = ReplacingMergeTree
+PRIMARY KEY (timestamp, block_num, `index`)
+ORDER BY (timestamp, block_num, `index`);
+
+/* SetTimestampTolerance */
+CREATE TABLE IF NOT EXISTS set_timestamp_tolerance (
+    -- block --
+    block_num   UInt32,
+    block_hash  FixedString(66),
+    timestamp   DateTime(0, 'UTC'),
+
+    -- ordering --
+    ordinal          UInt64,
+    `index`          UInt64,
+    global_sequence  UInt64,
+
+    -- transaction --
+    tx_hash   FixedString(66),
+
+    -- call --
+    caller    FixedString(42),
+
+    -- log --
+    contract  FixedString(42),
+
+    -- event --
+    timestamp_tolerance UInt256,
+
+    /* indexes (base) */
+    INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_caller    (caller)    TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
+
+    /* indexes (event) */
+    INDEX idx_timestamp_tolerance (timestamp_tolerance) TYPE bloom_filter GRANULARITY 4
+) ENGINE = ReplacingMergeTree
+PRIMARY KEY (timestamp, block_num, `index`)
+ORDER BY (timestamp, block_num, `index`);
+
+/* SetVaultFactory */
+CREATE TABLE IF NOT EXISTS set_vault_factory (
+    -- block --
+    block_num   UInt32,
+    block_hash  FixedString(66),
+    timestamp   DateTime(0, 'UTC'),
+
+    -- ordering --
+    ordinal          UInt64,
+    `index`          UInt64,
+    global_sequence  UInt64,
+
+    -- transaction --
+    tx_hash   FixedString(66),
+
+    -- call --
+    caller    FixedString(42),
+
+    -- log --
+    contract  FixedString(42),
+
+    -- event --
+    vault_factory FixedString(42),
+
+    /* indexes (base) */
+    INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_caller    (caller)    TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
+
+    /* indexes (event) */
+    INDEX idx_vault_factory (vault_factory) TYPE bloom_filter GRANULARITY 4
+) ENGINE = ReplacingMergeTree
+PRIMARY KEY (timestamp, block_num, `index`)
+ORDER BY (timestamp, block_num, `index`);
+
+/* SetVerifierDotFun */
+CREATE TABLE IF NOT EXISTS set_verifier_dot_fun (
+    -- block --
+    block_num   UInt32,
+    block_hash  FixedString(66),
+    timestamp   DateTime(0, 'UTC'),
+
+    -- ordering --
+    ordinal          UInt64,
+    `index`          UInt64,
+    global_sequence  UInt64,
+
+    -- transaction --
+    tx_hash   FixedString(66),
+
+    -- call --
+    caller    FixedString(42),
+
+    -- log --
+    contract  FixedString(42),
+
+    -- event --
+    verifier_dot_fun FixedString(42),
+
+    /* indexes (base) */
+    INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_caller    (caller)    TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
+
+    /* indexes (event) */
+    INDEX idx_verifier_dot_fun (verifier_dot_fun) TYPE bloom_filter GRANULARITY 4
+) ENGINE = ReplacingMergeTree
+PRIMARY KEY (timestamp, block_num, `index`)
+ORDER BY (timestamp, block_num, `index`);
+
+/* SetNativeToken */
+CREATE TABLE IF NOT EXISTS set_native_token (
+    -- block --
+    block_num   UInt32,
+    block_hash  FixedString(66),
+    timestamp   DateTime(0, 'UTC'),
+
+    -- ordering --
+    ordinal          UInt64,
+    `index`          UInt64,
+    global_sequence  UInt64,
+
+    -- transaction --
+    tx_hash   FixedString(66),
+
+    -- call --
+    caller    FixedString(42),
+
+    -- log --
+    contract  FixedString(42),
+
+    -- event --
+    wrapped_native FixedString(42),
+    native_token FixedString(42),
+    native_token_feed FixedString(66),
+    native_token_decimals UInt32,
+    native_token_is_stakable Bool,
+
+    /* indexes (base) */
+    INDEX idx_tx_hash   (tx_hash)   TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_caller    (caller)    TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_contract  (contract)  TYPE set(16)      GRANULARITY 4,
+
+    /* indexes (event) */
+    INDEX idx_wrapped_native (wrapped_native) TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_native_token   (native_token)   TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_native_token_feed (native_token_feed) TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_native_token_decimals (native_token_decimals) TYPE set(256) GRANULARITY 4,
+    INDEX idx_native_token_is_stakable (native_token_is_stakable) TYPE set(2) GRANULARITY 4
 ) ENGINE = ReplacingMergeTree
 PRIMARY KEY (timestamp, block_num, `index`)
 ORDER BY (timestamp, block_num, `index`);
