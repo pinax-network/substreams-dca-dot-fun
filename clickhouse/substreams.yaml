@@ -12,7 +12,7 @@ imports:
   sql: https://github.com/streamingfast/substreams-sink-sql/releases/download/protodefs-v1.0.7/substreams-sink-sql-protodefs-v1.0.7.spkg
 
   # DCA.fun Substreams
-  dca_dot_fun: https://github.com/pinax-network/substreams-dca-dot-fun/releases/download/v0.1.3/dca-dot-fun-v0.1.3.spkg
+  dca_dot_fun: https://github.com/pinax-network/substreams-dca-dot-fun/releases/download/v0.2.0/dca-dot-fun-v0.2.0.spkg
 
 binaries:
   default:
@@ -37,7 +37,7 @@ sink:
     postgraphile_frontend:
       enabled: false
 
-network: mainnet
+network: base
 
 params:
-  dca_dot_fun:map_events: evt_addr:0xdca0f9f6a27b48a097561fa3e52dbc3bad21f88f # DCA.fun contract address
+  dca_dot_fun:map_events: evt_addr:0xdca000935f1073df8e8235c1f577fe0d81f69af8 # DCA.fun contract address

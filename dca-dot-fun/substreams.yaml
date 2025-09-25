@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: dca_dot_fun
-  version: v0.1.3
+  version: v0.2.0
   url: https://github.com/pinax-network/substreams-dca-dot-fun
   description: DCA.fun events
   image: ../image.png
@@ -34,4 +34,6 @@ modules:
       type: proto:dca.dot.fun.v1.Events
 
 params:
-  map_events: "evt_addr:0xdca01cc53e085a32eadbe9e60a2efb253d6f3b7b" # DCA.fun contract address
+  map_events: "evt_addr:0xdca000935f1073df8e8235c1f577fe0d81f69af8" # DCA.fun contract address
+
+network: base

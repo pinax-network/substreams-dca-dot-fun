@@ -196,7 +196,7 @@ pub struct FillOrder {
     pub scaling_factor: ::prost::alloc::string::String,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
-///                   PAUSE / CIRCUIT-BREAKER EVENTS
+///                    PAUSE / CIRCUIT-BREAKER EVENTS
 /// ╚═══════════════════════════════════════════════════════════╝
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -245,7 +245,7 @@ pub struct PauseFill {
     pub is_paused: bool,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
-///           STRATEGY & PROTOCOL CONFIGURATION EVENTS
+///            STRATEGY & PROTOCOL CONFIGURATION EVENTS
 /// ╚═══════════════════════════════════════════════════════════╝
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -557,7 +557,7 @@ pub struct SetNativeToken {
     pub native_token_is_stakable: bool,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
-///                        TOKEN CONFIGURATION
+///                         TOKEN CONFIGURATION
 /// ╚═══════════════════════════════════════════════════════════╝
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -714,7 +714,7 @@ pub struct RoleRevoked {
     pub sender: ::prost::alloc::vec::Vec<u8>,
 }
 /// ╔═══════════════════════════════════════════════════════════╗
-///            EXTERNAL INTEGRATIONS & ADAPTER CONFIGS
+///             EXTERNAL INTEGRATIONS & ADAPTER CONFIGS
 /// ╚═══════════════════════════════════════════════════════════╝
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
