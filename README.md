@@ -4,7 +4,7 @@
 
 ```yaml
 params:
-  map_events: "evt_addr:0xdca0f9f6a27b48a097561fa3e52dbc3bad21f88f" # DCA.fun contract address
+  map_events: "evt_addr:0xdca00000067413240aeab357a3a89ea352d013e8" # DCA.fun contract address
 ```
 
 ## Includes
